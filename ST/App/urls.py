@@ -9,12 +9,6 @@ from App.views.analytics_views import product_rating_analytics, generate_rating_
 from App.views.dashboard_views import admin_dashboard
 from App.views.graph_views import simple_graph_page, generate_graph  # <-- generate_graph رو اضافه کن
 from App.views.product_views import download_product
-from App.views.password_reset_views import (
-    CustomPasswordResetView,
-    PasswordResetDoneNoEmailView,
-    CustomPasswordResetConfirmView,
-    CustomPasswordResetCompleteView
-)
 from App.views.watchlist_views import add_to_watchlist, remove_from_watchlist, update_watchlist_status, watchlist_page
 
 app_name = 'App'
@@ -35,11 +29,6 @@ urlpatterns = [
 
     path('change-password/', auth_views.PasswordChangeView.as_view(
         template_name='change_password.html', success_url='/profile/'), name='change_password'),
-
-    path('forgot-password/', CustomPasswordResetView.as_view(), name='forgot_password'),
-    path('reset/done/', PasswordResetDoneNoEmailView.as_view(), name='password_reset_done_no_email'),
-    path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
 

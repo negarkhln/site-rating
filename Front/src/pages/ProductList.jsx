@@ -2,7 +2,8 @@
 import React, {useState, useEffect} from "react";
 import {Link, useSearchParams} from "react-router-dom";
 import {getProducts} from "../services/api"; // ایمپورت سرویس API که ساختیم
-import axios from "axios"; // برای فراخوانی دسته‌بندی‌ها
+import axios from "axios";
+import Navbar from "../components/Navbar.jsx"; // برای فراخوانی دسته‌بندی‌ها
 
 const ProductList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -113,8 +114,8 @@ const ProductList = () => {
     };
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
-        {/* Navbar */}
-        <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
+        <Navbar/>
+        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold text-[#C9A84C]">
@@ -163,7 +164,7 @@ const ProductList = () => {
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav>*/}
 
         <div className="container mx-auto px-6 py-8">
             <h1 className="text-3xl font-bold text-[#1A2A4A] mb-6">لیست محصولات</h1>

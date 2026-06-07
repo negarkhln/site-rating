@@ -128,3 +128,25 @@ MEDIA_ROOT = BASE_DIR / 'media'  # اضافه شد
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# --- تنظیمات احراز هویت با JWT ---
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    # اگر می‌خوای کلاً APIها بدون لاگین در دسترس نباشن، این رو اضافه کن:
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # توکن هر 60 دقیقه منقضی میشه
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # رفرش توکن تا 1 روز اعتبار داره
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}

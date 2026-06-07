@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Link, useParams, useNavigate} from "react-router-dom";
-import axios from "axios"; // حتما ایمپورت کن
+import axios from "axios";
+import Navbar from "../components/Navbar.jsx"; // حتما ایمپورت کن
 
 const ProductDetail = () => {
     const {id} = useParams();
@@ -159,8 +160,8 @@ const ProductDetail = () => {
     };
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
-        {/* Navbar */}
-        <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
+        <Navbar/>
+        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold text-[#C9A84C]">
@@ -209,7 +210,7 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav>*/}
 
         <div className="container mx-auto px-6 py-8 max-w-4xl">
             {/* Message Toast */}

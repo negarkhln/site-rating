@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
-import axios from "axios"; // حتما باید ایمپورت شود
+import axios from "axios";
+import Navbar from "../components/Navbar.jsx"; // حتما باید ایمپورت شود
 
 const Home = () => {
     const [user, setUser] = useState(null);
@@ -10,11 +11,19 @@ const Home = () => {
     useEffect(() => {
         // ۱. گرفتن اطلاعات کاربر
         const fetchUser = async () => {
-            try {
-                // در آینده اگر سیستم لاگین داشتید، اینجا فراخوانی کنید
-                setUser(null);
-            } catch (err) {
-                setUser(null);
+            const token = localStorage.getItem("access_token");
+            if (token) {
+                try {
+                    const response = await axios.get('http://127.0.0.1:8000/api/user/', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    setUser(response.data); // حالا اطلاعات kimiya از سرور میاد
+                } catch (err) {
+                    console.error("خطا در دریافت اطلاعات کاربر", err);
+                    localStorage.removeItem("access_token");
+                }
             }
         };
 
@@ -37,8 +46,8 @@ const Home = () => {
     }, []); // وابستگی‌ها خالی است تا فقط یک بار در لود اولیه اجرا شود
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
-        {/* Navbar */}
-        <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
+        <Navbar/>
+        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold text-[#C9A84C]">🎬 MovieRating</div>
@@ -64,12 +73,14 @@ const Home = () => {
                 </div>
             </div>
         </nav>
+        */}
 
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] text-white">
             <div className="container mx-auto px-6 py-16 text-center relative z-10">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">به <span
-                    className="text-[#C9A84C]">MovieRating</span> خوش آمدید</h1>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    {user ? `خوش آمدی ${user.username} عزیز!` : "به MovieRating خوش آمدید"}
+                </h1>
                 <p className="text-xl text-gray-300 max-w-2xl mx-auto">بهترین فیلم‌ها و سریال‌ها را امتیاز دهید.</p>
             </div>
         </div>

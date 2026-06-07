@@ -1,79 +1,65 @@
-from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib import messages
-from django.views.generic.edit import FormView
-from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordResetConfirmView
-from App.forms import PhoneResetForm
-
-User = get_user_model()
 
 
-class CustomPasswordResetView(FormView):
-    """
-    ویوی بازیابی رمز عبور بدون ایمیل - فقط با نام کاربری
-    """
-    template_name = 'phone_forgot_password.html'
-    form_class = PhoneResetForm
-    success_url = reverse_lazy('App:password_reset_done_no_email')
+class RequestPasswordResetAPI(APIView):
+    permission_classes = [AllowAny]
 
-    def form_valid(self, form):
-        username = form.cleaned_data['phone_or_username']  # اینجا اسم کاربری گرفته میشه
+    def post(self, request):
+        username = request.data.get('phone_or_username')
+        if not username:
+            return Response({'detail': 'وارد کردن نام کاربری الزامی است.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # جستجوی کاربر بر اساس نام کاربری
             user = User.objects.get(username=username)
+            if not user.is_active:
+                return Response({'detail': 'این حساب کاربری غیرفعال است.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            if user and user.is_active:
-                # تولید uid و token
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = default_token_generator.make_token(user)
+            # تولید توکن و آیدی انحصاری کاربر
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
 
-                # ساخت لینک کامل
-                reset_link = self.request.build_absolute_uri(
-                    reverse_lazy('App:password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-                )
+            # ساخت لینکی که کاربر باید در ری‌اکت باز کند
+            reset_link = f"http://localhost:5173/reset-confirm/{uid}/{token}"
 
-                # ذخیره لینک در session برای نمایش در صفحه بعد
-                self.request.session['reset_link'] = reset_link
-                self.request.session['reset_user'] = user.username
-
-                messages.success(self.request, 'لینک بازیابی با موفقیت ساخته شد.')
-            else:
-                messages.warning(self.request, 'کاربر غیرفعال است.')
+            return Response({
+                'detail': 'لینک بازیابی با موفقیت ساخته شد.',
+                'reset_link': reset_link
+            }, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
-            messages.warning(self.request, 'کاربری با این نام کاربری یافت نشد.')
-        except Exception as e:
-            messages.error(self.request, f'خطایی رخ داده است: {str(e)}')
-
-        return super().form_valid(form)
+            return Response({'detail': 'کاربری با این نام کاربری یافت نشد.'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class PasswordResetDoneNoEmailView(FormView):
-    """صفحه نمایش لینک بازیابی به کاربر"""
-    template_name = 'phone_reset_done.html'
+class ConfirmPasswordResetAPI(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, request, *args, **kwargs):
-        reset_link = request.session.get('reset_link', '')
-        reset_user = request.session.get('reset_user', '')
+    def post(self, request, uidb64, token):
+        password = request.data.get('new_password1')
+        if not password:
+            return Response({'detail': 'رمز عبور جدید الزامی است.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return render(request, self.template_name, {
-            'reset_link': reset_link,
-            'reset_user': reset_user
-        })
+        try:
+            # دکود کردن آیدی کاربر
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
 
+            # بررسی صحت توکن
+            if not default_token_generator.check_token(user, token):
+                return Response({'detail': 'لینک بازیابی منقضی شده یا نامعتبر است.'},
+                                status=status.HTTP_400_BAD_REQUEST)
 
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'phone_reset_confirm.html'
-    success_url = reverse_lazy('App:password_reset_complete')
+            # ست کردن رمز جدید
+            user.set_password(password)
+            user.save()
+            return Response({'detail': 'رمز عبور با موفقیت تغییر کرد.'}, status=status.HTTP_200_OK)
 
-
-class CustomPasswordResetCompleteView(FormView):
-    template_name = 'phone_reset_complete.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({'detail': 'لینک نامعتبر است.'}, status=status.HTTP_400_BAD_REQUEST)
