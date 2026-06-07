@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ویرایش نظر</title>
+    <style>
+        body { font-family: Arial; padding: 20px; direction: rtl; max-width: 600px; margin: auto; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: blue; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
+        .error { color: red; }
+        .nav { margin-bottom: 20px; }
+        a { text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{% url 'App:home' %}">صفحه اصلی</a>
+        <a href="{% url 'App:product_list' %}">محصولات</a>
+        <a href="{% url 'App:profile' %}">پروفایل من</a>
+        <a href="{% url 'App:logout' %}">خروج</a>
+    </div>
+
+    <h2>ویرایش نظر</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="error">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="text" rows="5" required>{{ comment.text }}</textarea>
+        <br><br>
+        <button type="submit">ذخیره تغییرات</button>
+        <a href="{% url 'App:product_detail' comment.product.id %}">انصراف</a>
+    </form>
+</body>
+</html>

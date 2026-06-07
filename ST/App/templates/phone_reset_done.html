@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>لینک بازیابی</title>
+    <style>
+        body { font-family: Arial; padding: 50px; direction: rtl; text-align: center; }
+        .container { max-width: 500px; margin: auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
+        .link-box { background: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0; word-break: break-all; }
+        button { background: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .copy-btn { background: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✅ لینک بازیابی ساخته شد</h2>
+
+        {% if reset_link %}
+            <p>لینک زیر را کپی کنید و در مرورگر باز کنید:</p>
+            <div class="link-box" id="resetLink">{{ reset_link }}</div>
+            <button class="copy-btn" onclick="copyToClipboard()">📋 کپی لینک</button>
+            <a href="{{ reset_link }}"><button>🔗 باز کردن لینک</button></a>
+        {% else %}
+            <p>اگر اطلاعات وارد شده صحیح باشد، لینک بازیابی ساخته خواهد شد.</p>
+            <p>لطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.</p>
+        {% endif %}
+
+        <p style="margin-top: 30px;">
+            <a href="{% url 'App:login' %}">بازگشت به صفحه ورود</a>
+        </p>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const link = document.getElementById('resetLink').innerText;
+            navigator.clipboard.writeText(link);
+            alert('لینک با موفقیت کپی شد!');
+        }
+    </script>
+</body>
+</html>

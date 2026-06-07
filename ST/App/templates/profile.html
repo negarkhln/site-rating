@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>پروفایل {{ user.username }}</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .profile-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .old-user {
+            color: green;
+            font-weight: bold;
+            background: #e8f5e9;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .new-user {
+            color: red;
+            font-weight: bold;
+            background: #ffebee;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav a:hover {
+            background: #e74c3c;
+        }
+
+        .profile-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-links a {
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-change-password {
+            background: #e67e22;
+        }
+
+        .btn-watchlist {
+            background: #9b59b6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <a href="{% url 'App:home' %}">صفحه اصلی</a>
+    <a href="{% url 'App:product_list' %}">محصولات</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'App:profile' %}" style="background: #e74c3c;">پروفایل من</a>
+    <a href="{% url 'App:logout' %}">خروج</a>
+    {% else %}
+    <a href="{% url 'App:login' %}">ورود</a>
+    <a href="{% url 'App:signup' %}">ثبت نام</a>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="profile-card">
+        <h2>پروفایل کاربر: {{ user.username }}</h2>
+        <p>تاریخ عضویت: {{ profile.join_date|date:"Y-m-d" }}</p>
+        <p>تعداد لاگین‌ها: {{ profile.login_count }}</p>
+        <p>تعداد امتیازهای داده شده: {{ profile.total_ratings_count }}</p>
+        <p>مجموع امتیازها: {{ profile.sum_of_scores }}</p>
+
+        {% if profile.total_ratings_count > 0 %}
+        <p>میانگین امتیازات شما: {{ profile.sum_of_scores|floatformat:2 }} / {{ profile.total_ratings_count }}</p>
+        {% endif %}
+
+        <p>
+            وضعیت:
+            {% if profile.is_old_user %}
+            <span class="old-user">✓ کاربر قدیمی</span>
+            {% else %}
+            <span class="new-user">✗ کاربر جدید</span>
+            {% endif %}
+        </p>
+
+        <div class="profile-links">
+            <a href="{% url 'App:change_password' %}" class="btn-change-password">
+                🔑 تغییر رمز عبور
+            </a>
+            <a href="{% url 'App:watchlist' %}" class="btn-watchlist">
+                📋 لیست تماشای من ({{ user.watchlist.count }})
+            </a>
+        </div>
+    </div>
+
+    {% if ratings %}
+    <h3>امتیازهای ثبت شده شما:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>محصول</th>
+                <th>امتیاز</th>
+                <th>تاریخ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in ratings %}
+            <tr>
+                <td>{{ rating.product.Pname }}</td>
+                <td>{{ rating.score }}</td>
+                <td>{{ rating.record_date|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+</body>
+</html>

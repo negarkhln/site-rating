@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>لیست تماشای من</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            direction: rtl;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .nav {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .watchlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .watchlist-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .watchlist-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .watchlist-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .watchlist-card h3 {
+            margin: 10px 0;
+        }
+        .watchlist-card p {
+            color: #666;
+            font-size: 12px;
+        }
+        .status-form {
+            margin-top: 10px;
+        }
+        .status-form select, .status-form button {
+            padding: 5px;
+            margin: 2px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .remove-link {
+            color: #e74c3c;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 15px;
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 لیست تماشای من</h1>
+            <p>{{ total_count }} آیتم در لیست شما</p>
+        </div>
+
+        <div class="nav">
+            <a href="{% url 'App:home' %}">صفحه اصلی</a>
+            <a href="{% url 'App:product_list' %}">محصولات</a>
+            <a href="{% url 'App:profile' %}">پروفایل من</a>
+            <a href="{% url 'App:logout' %}">خروج</a>
+        </div>
+
+        <!-- علاقه‌مندی‌ها -->
+        {% if favorites %}
+        <div class="section">
+            <h2>❤️ علاقه‌مندی‌های من</h2>
+            <div class="watchlist-grid">
+                {% for item in favorites %}
+                <div class="watchlist-card">
+                    <h3>{{ item.product.Pname }}</h3>
+                    {% if item.product.genre %}<p>{{ item.product.genre }}</p>{% endif %}
+                    <form method="post" action="{% url 'App:update_watchlist_status' item.product.id %}" class="status-form">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="planning" {% if item.status == 'planning' %}selected{% endif %}>بعداً می‌بینم</option>
+                            <option value="watching" {% if item.status == 'watching' %}selected{% endif %}>در حال تماشا</option>
+                            <option value="completed" {% if item.status == 'completed' %}selected{% endif %}>تماشا شده</option>
+                            <option value="favorite" {% if item.status == 'favorite' %}selected{% endif %}>علاقه‌مندی</option>
+                        </select>
+                        <button type="submit">تغییر</button>
+                    </form>
+                    <a href="{% url 'App:remove_from_watchlist' item.product.id %}" class="remove-link" onclick="return confirm('آیا مطمئن هستید؟')">❌ حذف</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- در حال تماشا -->
+        {% if watching %}
+        <div class="section">
+            <h2>🎬 در حال تماشا</h2>
+            <div class="watchlist-grid">
+                {% for item in watching %}
+                <div class="watchlist-card">
+                    <h3>{{ item.product.Pname }}</h3>
+                    <form method="post" action="{% url 'App:update_watchlist_status' item.product.id %}" class="status-form">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="planning" {% if item.status == 'planning' %}selected{% endif %}>بعداً می‌بینم</option>
+                            <option value="watching" {% if item.status == 'watching' %}selected{% endif %}>در حال تماشا</option>
+                            <option value="completed" {% if item.status == 'completed' %}selected{% endif %}>تماشا شده</option>
+                            <option value="favorite" {% if item.status == 'favorite' %}selected{% endif %}>علاقه‌مندی</option>
+                        </select>
+                        <button type="submit">تغییر</button>
+                    </form>
+                    <a href="{% url 'App:remove_from_watchlist' item.product.id %}" class="remove-link" onclick="return confirm('آیا مطمئن هستید؟')">❌ حذف</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- بعداً می‌بینم -->
+        {% if planning %}
+        <div class="section">
+            <h2>📌 بعداً می‌بینم</h2>
+            <div class="watchlist-grid">
+                {% for item in planning %}
+                <div class="watchlist-card">
+                    <h3>{{ item.product.Pname }}</h3>
+                    <form method="post" action="{% url 'App:update_watchlist_status' item.product.id %}" class="status-form">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="planning" {% if item.status == 'planning' %}selected{% endif %}>بعداً می‌بینم</option>
+                            <option value="watching" {% if item.status == 'watching' %}selected{% endif %}>در حال تماشا</option>
+                            <option value="completed" {% if item.status == 'completed' %}selected{% endif %}>تماشا شده</option>
+                            <option value="favorite" {% if item.status == 'favorite' %}selected{% endif %}>علاقه‌مندی</option>
+                        </select>
+                        <button type="submit">تغییر</button>
+                    </form>
+                    <a href="{% url 'App:remove_from_watchlist' item.product.id %}" class="remove-link" onclick="return confirm('آیا مطمئن هستید؟')">❌ حذف</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- تماشا شده -->
+        {% if completed %}
+        <div class="section">
+            <h2>✅ تماشا شده</h2>
+            <div class="watchlist-grid">
+                {% for item in completed %}
+                <div class="watchlist-card">
+                    <h3>{{ item.product.Pname }}</h3>
+                    <form method="post" action="{% url 'App:update_watchlist_status' item.product.id %}" class="status-form">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="planning" {% if item.status == 'planning' %}selected{% endif %}>بعداً می‌بینم</option>
+                            <option value="watching" {% if item.status == 'watching' %}selected{% endif %}>در حال تماشا</option>
+                            <option value="completed" {% if item.status == 'completed' %}selected{% endif %}>تماشا شده</option>
+                            <option value="favorite" {% if item.status == 'favorite' %}selected{% endif %}>علاقه‌مندی</option>
+                        </select>
+                        <button type="submit">تغییر</button>
+                    </form>
+                    <a href="{% url 'App:remove_from_watchlist' item.product.id %}" class="remove-link" onclick="return confirm('آیا مطمئن هستید؟')">❌ حذف</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not watching and not completed and not planning and not favorites %}
+        <div class="empty-message">
+            <p>📭 لیست تماشای شما خالی است.</p>
+            <p>برای افزودن، به صفحه جزئیات محصولات بروید و روی "افزودن به لیست تماشا" کلیک کنید.</p>
+            <a href="{% url 'App:product_list' %}" class="back-btn">🔍 مشاهده محصولات</a>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'App:profile' %}" class="back-btn">🔙 بازگشت به پروفایل</a>
+        </div>
+    </div>
+</body>
+</html>

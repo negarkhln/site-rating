@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: #16213e;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            max-width: 90%;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            background: white;
+            padding: 10px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <img src="{{ graph_url }}" alt="{{ title }}">
+        <br>
+        <a href="/admin-dashboard/" class="back-btn">🔙 بازگشت به داشبورد</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>صفحه اصلی</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 50px; direction: rtl; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-left: 15px; }
+        a { color: blue; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .products { text-align: right; max-width: 500px; margin: 20px auto; }
+        .product { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{% url 'App:home' %}">صفحه اصلی</a>
+        <a href="{% url 'App:product_list' %}">محصولات</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'App:profile' %}">پروفایل من</a>
+            <a href="{% url 'App:logout' %}">خروج</a>
+        {% else %}
+            <a href="{% url 'App:login' %}">ورود</a>
+            <a href="{% url 'App:signup' %}">ثبت نام</a>
+        {% endif %}
+    </div>
+
+    <h2>خوش آمدی {{ user.username|default:"میهمان" }}!</h2>
+
+    {% if user.is_authenticated %}
+        <p>شما به عنوان یک کاربر وارد شده‌اید.</p>
+    {% else %}
+        <p>لطفاً برای ورود <a href="{% url 'App:login' %}">اینجا</a> کلیک کنید.</p>
+    {% endif %}
+
+    {% if products %}
+        <div class="products">
+            <h3>محصولات برتر:</h3>
+            {% for product in products %}
+                <div class="product">
+                    <a href="{% url 'App:product_detail' product.id %}">{{ product.Pname }}</a>
+                    - امتیاز: {{ product.weighted_rating|floatformat:2 }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>

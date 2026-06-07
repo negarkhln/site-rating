@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>رمز عبور تغییر کرد</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 50px; direction: rtl; }
+        .container { max-width: 400px; margin: auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
+        .success { color: green; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="success">✅ رمز عبور با موفقیت تغییر کرد</h2>
+        <p>اکنون می‌توانید با رمز جدید خود وارد شوید.</p>
+        <a href="{% url 'App:login' %}"><button style="background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px;">ورود به سایت</button></a>
+    </div>
+</body>
+</html>

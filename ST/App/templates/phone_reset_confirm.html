@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>تنظیم رمز جدید</title>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 50px;
+        direction: rtl;
+        text-align: center;
+      }
+      .container {
+        max-width: 400px;
+        margin: auto;
+        border: 1px solid #ddd;
+        padding: 30px;
+        border-radius: 10px;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        box-sizing: border-box;
+      }
+      button {
+        background: #27ae60;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>تنظیم رمز عبور جدید</h2>
+
+      {% if form.errors %}
+      <div class="error">
+        {% for field, errors in form.errors.items %} {% for error in errors %}
+        <p>{{ error }}</p>
+        {% endfor %} {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <p>رمز عبور جدید:</p>
+        {{ form.new_password1 }}
+        <p>تکرار رمز عبور جدید:</p>
+        {{ form.new_password2 }}
+        <button type="submit">تغییر رمز</button>
+      </form>
+    </div>
+  </body>
+</html>
