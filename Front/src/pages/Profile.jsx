@@ -71,41 +71,6 @@ const Profile = () => {
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
         <Navbar/>
-        {/* <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="text-2xl font-bold text-[#C9A84C]">
-              🎬 MovieRating
-            </div>
-            <div className="flex space-x-4 space-x-reverse">
-              <Link
-                to="/"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-              >
-                صفحه اصلی
-              </Link>
-              <Link
-                to="/movies"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-              >
-                محصولات
-              </Link>
-              <Link
-                to="/profile"
-                className="bg-[#C9A84C] text-[#1A2A4A] px-3 py-2 rounded font-bold"
-              >
-                پروفایل من
-              </Link>
-              <Link
-                to="/login"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-              >
-                خروج
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>*/}
 
         <div className="container mx-auto px-6 py-8">
             <div className="max-w-4xl mx-auto">
@@ -208,31 +173,36 @@ const Profile = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {ratings.map((rating, index) => (<tr
-                                key={rating.id}
-                                className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-[#F5F0E8]"}`}
-                            >
-                                <td className="p-3 text-center">
-                                    <Link
-                                        to={`/movie/${rating.product.id}`}
-                                        className="text-[#1A2A4A] hover:text-[#C9A84C] transition font-medium"
-                                    >
-                                        {rating.product.Pname}
-                                    </Link>
-                                </td>
-                                <td className="p-3 text-center">
-                                    <div className="flex items-center justify-center gap-1">
-                                        <span className="text-[#C9A84C] text-lg">★</span>
-                                        <span className="font-bold text-[#1A2A4A]">
-                              {rating.score}
-                            </span>
-                                        <span className="text-gray-400 text-sm">/ 5</span>
-                                    </div>
-                                </td>
-                                <td className="p-3 text-center text-gray-500 text-sm">
-                                    {rating.record_date}
-                                </td>
-                            </tr>))}
+                            {ratings.map((rating, index) => {
+                                // 🟢 ساخت یک کلید کاملاً منحصر به فرد برای رفع قطعی وارنینگ ری‌اکت
+                                const uniqueKey = rating.id ? `rating-${rating.id}` : `rating-idx-${index}`;
+
+                                return (<tr
+                                    key={uniqueKey}
+                                    className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-[#F5F0E8]"}`}
+                                >
+                                    <td className="p-3 text-center">
+                                        <Link
+                                            to={`/movie/${rating.product?.id || rating.product_id}`}
+                                            className="text-[#1A2A4A] hover:text-[#C9A84C] transition font-medium"
+                                        >
+                                            {rating.product?.Pname || "محصول بدون نام"}
+                                        </Link>
+                                    </td>
+                                    <td className="p-3 text-center">
+                                        <div className="flex items-center justify-center gap-1">
+                                            <span className="text-[#C9A84C] text-lg">★</span>
+                                            <span className="font-bold text-[#1A2A4A]">
+                                    {rating.score}
+                                </span>
+                                            <span className="text-gray-400 text-sm">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td className="p-3 text-center text-gray-500 text-sm">
+                                        {rating.record_date}
+                                    </td>
+                                </tr>);
+                            })}
                             </tbody>
                         </table>
                     </div>

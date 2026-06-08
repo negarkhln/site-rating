@@ -1,90 +1,58 @@
-# App/views/watchlist_views.py
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.urls import reverse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 from App.models import Product, WatchList
 
 
-@login_required
-def add_to_watchlist(request, product_id):
-    """اضافه کردن محصول به لیست تماشا"""
-    product = get_object_or_404(Product, id=product_id)
+# اگر سریالایزر داری ایمپورت کن، در غیر این صورت دستی دیتای محصول را می‌سازیم
 
-    # بررسی اینکه آیا قبلاً اضافه شده
-    watchlist_item, created = WatchList.objects.get_or_create(
-        user=request.user,
-        product=product,
-        defaults={'status': 'planning'}
-    )
+class WatchlistAPI(APIView):
+    permission_classes = [IsAuthenticated]
 
-    if created:
-        messages.success(request, f'"{product.Pname}" به لیست تماشای شما اضافه شد.')
-    else:
-        messages.info(request, f'"{product.Pname}" قبلاً در لیست تماشای شما وجود دارد.')
+    def get(self, request):
+        """دریافت کل لیست تماشای کاربر"""
+        items = WatchList.objects.filter(user=request.user).select_related('product')
+        data = []
+        for item in items:
+            data.append({
+                'id': item.id,
+                'status': item.status,
+                'product': {
+                    'id': item.product.id,
+                    'Pname': item.product.Pname,
+                    'genre': getattr(item.product, 'genre', '')  # اگر فیلد ژانر وجود دارد
+                }
+            })
+        return Response(data)
 
-    # برگشت به صفحه قبلی یا صفحه جزئیات محصول
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return redirect(referer)
-    return redirect('App:product_detail', product_id=product.id)
+    def post(self, request, product_id):
+        """اضافه کردن یا به‌روزرسانی وضعیت یک محصول در لیست"""
+        product = get_object_or_404(Product, id=product_id)
+        new_status = request.data.get('status', 'planning')
 
+        if new_status not in ['watching', 'completed', 'planning', 'favorite']:
+            return Response({'error': 'وضعیت نامعتبر است'}, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
-def remove_from_watchlist(request, product_id):
-    """حذف محصول از لیست تماشا"""
-    product = get_object_or_404(Product, id=product_id)
-    watchlist_item = WatchList.objects.filter(user=request.user, product=product).first()
+        watchlist_item, created = WatchList.objects.get_or_create(
+            user=request.user,
+            product=product,
+            defaults={'status': new_status}
+        )
 
-    if watchlist_item:
-        watchlist_item.delete()
-        messages.success(request, f'"{product.Pname}" از لیست تماشای شما حذف شد.')
-    else:
-        messages.warning(request, f'"{product.Pname}" در لیست تماشای شما وجود ندارد.')
-
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return redirect(referer)
-    return redirect('App:product_detail', product_id=product.id)
-
-
-@login_required
-def update_watchlist_status(request, product_id):
-    """به‌روزرسانی وضعیت محصول در لیست تماشا"""
-    product = get_object_or_404(Product, id=product_id)
-    watchlist_item = WatchList.objects.filter(user=request.user, product=product).first()
-
-    if request.method == 'POST':
-        new_status = request.POST.get('status')
-        if watchlist_item and new_status in ['watching', 'completed', 'planning', 'favorite']:
+        if not created:
             watchlist_item.status = new_status
             watchlist_item.save()
-            messages.success(request,
-                             f'وضعیت "{product.Pname}" به "{dict(WatchList.STATUS_CHOICES).get(new_status, new_status)}" تغییر کرد.')
 
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return redirect(referer)
-    return redirect('App:product_detail', product_id=product.id)
+        return Response({'message': 'لیست تماشا با موفقیت به‌روزرسانی شد'}, status=status.HTTP_200_OK)
 
+    def delete(self, request, product_id):
+        """حذف محصول از لیست تماشا"""
+        product = get_object_or_404(Product, id=product_id)
+        watchlist_item = WatchList.objects.filter(user=request.user, product=product).first()
 
-@login_required
-def watchlist_page(request):
-    """صفحه لیست تماشای کاربر"""
-    watchlist_items = WatchList.objects.filter(user=request.user).select_related('product')
-
-    # گروه‌بندی بر اساس وضعیت
-    watching = watchlist_items.filter(status='watching')
-    completed = watchlist_items.filter(status='completed')
-    planning = watchlist_items.filter(status='planning')
-    favorites = watchlist_items.filter(status='favorite')
-
-    context = {
-        'watching': watching,
-        'completed': completed,
-        'planning': planning,
-        'favorites': favorites,
-        'total_count': watchlist_items.count(),
-    }
-    return render(request, 'watchlist.html', context)
+        if watchlist_item:
+            watchlist_item.delete()
+            return Response({'message': 'محصول از لیست تماشای شما حذف شد'}, status=status.HTTP_200_OK)
+        return Response({'error': 'محصول در لیست شما یافت نشد'}, status=status.HTTP_404_NOT_FOUND)

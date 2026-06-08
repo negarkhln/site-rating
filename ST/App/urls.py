@@ -9,7 +9,6 @@ from App.views.analytics_views import product_rating_analytics, generate_rating_
 from App.views.dashboard_views import admin_dashboard
 from App.views.graph_views import simple_graph_page, generate_graph  # <-- generate_graph رو اضافه کن
 from App.views.product_views import download_product
-from App.views.watchlist_views import add_to_watchlist, remove_from_watchlist, update_watchlist_status, watchlist_page
 
 app_name = 'App'
 
@@ -40,9 +39,4 @@ urlpatterns = [
     path('analytics/product/<int:product_id>/', product_rating_analytics, name='product_analytics'),
     path('analytics/chart/<int:product_id>/', generate_rating_chart, name='analytics_chart'),
 
-    # Watchlist
-    path('watchlist/', watchlist_page, name='watchlist'),
-    path('watchlist/add/<int:product_id>/', add_to_watchlist, name='add_to_watchlist'),
-    path('watchlist/remove/<int:product_id>/', remove_from_watchlist, name='remove_from_watchlist'),
-    path('watchlist/update/<int:product_id>/', update_watchlist_status, name='update_watchlist_status'),
 ]

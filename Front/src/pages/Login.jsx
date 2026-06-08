@@ -74,41 +74,6 @@ const Login = () => {
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
         <Navbar/>
-        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-[#C9A84C]">
-                        🎬 MovieRating
-                    </div>
-                    <div className="flex space-x-4 space-x-reverse">
-                        <Link
-                            to="/"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            صفحه اصلی
-                        </Link>
-                        <Link
-                            to="/movies"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            محصولات
-                        </Link>
-                        <Link
-                            to="/login"
-                            className="text-[#C9A84C] border-b-2 border-[#C9A84C] px-3 py-2 rounded"
-                        >
-                            ورود
-                        </Link>
-                        <Link
-                            to="/signup"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            ثبت نام
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </nav>*/}
 
         <div className="container mx-auto px-6 py-16">
             <div className="max-w-md mx-auto">

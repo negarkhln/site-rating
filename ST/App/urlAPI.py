@@ -1,5 +1,6 @@
 from django.urls import path
 
+from App import views
 from App.views.ProfileDetailAPI import ProfileDetailAPI, UserRatingsAPI
 from App.views.SignupAPIView import SignupAPIView
 from App.views.UserDetailView import UserDetailView
@@ -8,6 +9,7 @@ from App.views.api_views import (
     CategoryListAPI, RateProductAPI, AddCommentAPI
 )
 from App.views.password_reset_views import ConfirmPasswordResetAPI, RequestPasswordResetAPI
+from App.views.watchlist_views import WatchlistAPI
 
 urlpatterns = [
     path('products/', ProductListAPI.as_view(), name='product-list'),
@@ -23,4 +25,8 @@ urlpatterns = [
     path('forgot-password/', RequestPasswordResetAPI.as_view(), name='api-forgot-password'),
     path('reset-password/<str:uidb64>/<str:token>/', ConfirmPasswordResetAPI.as_view(),
          name='api-reset-password-confirm'),
+    path('watchlist/', WatchlistAPI.as_view(), name='api-watchlist'),
+    path('watchlist/<int:product_id>/', WatchlistAPI.as_view(), name='api-watchlist-action'),
+    path('comments/<int:comment_id>/edit/', views.edit_comment, name='api-edit-comment'),
+    path('comments/<int:comment_id>/delete/', views.delete_comment, name='api-delete-comment'),
 ]
