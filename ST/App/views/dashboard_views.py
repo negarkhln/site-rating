@@ -1,143 +1,113 @@
-# App/views/dashboard_views.py
-
-from django.shortcuts import render
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count, Avg, Sum, Q
-from django.utils import timezone
-from datetime import timedelta
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
+from django.db.models import Count, Avg, Sum
 from App.models import Product, Rating, Comment, UserProfile, Category
 from django.contrib.auth.models import User
 
 
-@staff_member_required
-def admin_dashboard(request):
-    """
-    داشبورد مدیریتی با آمار کامل
-    فقط کاربران ادمین (staff) می‌توانند دسترسی داشته باشند
-    """
-
-    # ========== آمار پایه ==========
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_dashboard_api(request):
+    # بدون try/except تا خطای واقعی در ترمینال جنگو چاپ شود
     total_products = Product.objects.count()
-    total_movies = Product.objects.filter(category__name='فیلم').count()
-    total_series = Product.objects.filter(category__name='سریال').count()
-    total_categories = Category.objects.count()
 
-    # ========== آمار کاربران ==========
+    total_movies = Product.objects.filter(category__name='فیلم').count() if Category.objects.filter(
+        name='فیلم').exists() else 0
+    total_series = Product.objects.filter(category__name='سریال').count() if Category.objects.filter(
+        name='سریال').exists() else 0
+
     total_users = User.objects.count()
     staff_users = User.objects.filter(is_staff=True).count()
     regular_users = total_users - staff_users
 
-    # کاربران قدیمی و جدید (محاسبه دستی چون is_old_user property است)
     all_profiles = UserProfile.objects.all()
-    old_users = sum(1 for p in all_profiles if p.is_old_user)
-    new_users = len(all_profiles) - old_users
+    old_users = 0
+    new_users = 0
+    active_users = 0
 
-    # کاربران فعال (کسانی که حداقل یک لاگین داشته‌اند)
-    active_users = UserProfile.objects.filter(login_count__gt=0).count()
+    for p in all_profiles:
+        if hasattr(p, 'is_old_user'):
+            if p.is_old_user:
+                old_users += 1
+            else:
+                new_users += 1
+        else:
+            new_users += 1
+        if hasattr(p, 'login_count') and p.login_count and p.login_count > 0:
+            active_users += 1
 
-    # ========== آمار امتیازات ==========
     total_ratings = Rating.objects.count()
     avg_rating = Rating.objects.aggregate(Avg('score'))['score__avg'] or 0
 
-    # توزیع امتیازات (1 تا 5)
     rating_distribution = {}
     for i in range(1, 6):
-        count = Rating.objects.filter(score=i).count()
-        rating_distribution[i] = count
+        rating_distribution[str(i)] = Rating.objects.filter(score=i).count()
 
-    # محصولات با بیشترین امتیاز
-    top_rated_products = Product.objects.filter(
-        weighted_rating__gt=0
-    ).order_by('-weighted_rating')[:10]
+    top_rated_products = []
+    if total_products > 0:
+        if hasattr(Product, 'weighted_rating'):
+            top_rated_qs = Product.objects.exclude(weighted_rating__isnull=True).order_by('-weighted_rating')[:10]
+        else:
+            top_rated_qs = Product.objects.all()[:10]
 
-    # محصولات با بیشترین تعداد امتیاز
-    most_rated_products = Product.objects.annotate(
-        rating_count=Count('ratings')
-    ).order_by('-rating_count')[:10]
+        top_rated_products = [{
+            'id': p.id,
+            'Pname': getattr(p, 'Pname', 'بدون نام'),
+            'weighted_rating': round(float(getattr(p, 'weighted_rating', 0) or 0), 2),
+            'ratings_count': p.ratings.count() if hasattr(p, 'ratings') else 0,
+            'views_count': getattr(p, 'views_count', 0) or 0
+        } for p in top_rated_qs]
 
-    # ========== آمار نظرات ==========
-    total_comments = Comment.objects.count()
-    active_comments = Comment.objects.filter(is_active=True).count()
-    inactive_comments = total_comments - active_comments
+    most_viewed_products = []
+    if total_products > 0 and hasattr(Product, 'views_count'):
+        most_viewed_qs = Product.objects.order_by('-views_count')[:10]
+        most_viewed_products = [{
+            'id': p.id,
+            'Pname': getattr(p, 'Pname', 'بدون نام'),
+            'views_count': getattr(p, 'views_count', 0) or 0,
+            'download_count': getattr(p, 'download_count', 0) or 0,
+            'weighted_rating': round(float(getattr(p, 'weighted_rating', 0) or 0), 2)
+        } for p in most_viewed_qs]
 
-    # کاربران با بیشترین نظر
-    top_commenters = User.objects.annotate(
-        comment_count=Count('comments')
+    top_commenters = []
+    top_commenters_qs = User.objects.annotate(
+        comment_count=Count('comments', distinct=True),
+        ratings_count=Count('rating', distinct=True)
     ).order_by('-comment_count')[:10]
 
-    # محصولات با بیشترین نظر
-    most_commented_products = Product.objects.annotate(
-        comment_count=Count('comments')
-    ).order_by('-comment_count')[:10]
-
-    # ========== آمار بازدید و دانلود ==========
-    total_views = Product.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
-    total_downloads = Product.objects.aggregate(Sum('download_count'))['download_count__sum'] or 0
-
-    # پربازدیدترین محصولات
-    most_viewed_products = Product.objects.order_by('-views_count')[:10]
-
-    # پربازدیدترین محصولات
-    most_downloaded_products = Product.objects.order_by('-download_count')[:10]
-
-    # ========== آمار محصولات بر اساس دسته ==========
-    products_by_category = {}
-    for cat in Category.objects.all():
-        products_by_category[cat.name] = cat.products.count()
-
-    # ========== آمار ماهانه (اخرین ۶ ماه) ==========
-    monthly_ratings = []
-    for i in range(6):
-        date = timezone.now().date() - timedelta(days=30 * i)
-        count = Rating.objects.filter(
-            record_date__year=date.year,
-            record_date__month=date.month
-        ).count()
-        monthly_ratings.append({
-            'month': date.strftime('%Y-%m'),
-            'count': count
+    for u in top_commenters_qs:
+        profile = getattr(u, 'userprofile', None)
+        is_old = getattr(profile, 'is_old_user', False) if profile else False
+        top_commenters.append({
+            'username': u.username,
+            'comment_count': u.comment_count,
+            'ratings_count': u.ratings_count,
+            'is_old_user': is_old
         })
 
-    context = {
-        # آمار پایه
-        'total_products': total_products,
-        'total_movies': total_movies,
-        'total_series': total_series,
-        'total_categories': total_categories,
+    total_views = Product.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0 if hasattr(Product,
+                                                                                                    'views_count') else 0
+    total_downloads = Product.objects.aggregate(Sum('download_count'))['download_count__sum'] or 0 if hasattr(Product,
+                                                                                                              'download_count') else 0
 
-        # آمار کاربران
-        'total_users': total_users,
-        'staff_users': staff_users,
-        'regular_users': regular_users,
-        'old_users': old_users,
-        'new_users': new_users,
-        'active_users': active_users,
+    products_by_category = {}
+    for cat in Category.objects.all():
+        products_by_category[cat.name] = cat.products.count() if hasattr(cat, 'products') else 0
 
-        # آمار امتیازات
-        'total_ratings': total_ratings,
-        'avg_rating': avg_rating,
-        'rating_distribution': rating_distribution,
-        'top_rated_products': top_rated_products,
-        'most_rated_products': most_rated_products,
-
-        # آمار نظرات
-        'total_comments': total_comments,
-        'active_comments': active_comments,
-        'inactive_comments': inactive_comments,
-        'top_commenters': top_commenters,
-        'most_commented_products': most_commented_products,
-
-        # آمار بازدید و دانلود
-        'total_views': total_views,
-        'total_downloads': total_downloads,
-        'most_viewed_products': most_viewed_products,
-        'most_downloaded_products': most_downloaded_products,
-
-        # آمار دسته‌بندی
-        'products_by_category': products_by_category,
-
-        # آمار ماهانه
-        'monthly_ratings': monthly_ratings,
+    data = {
+        'stats': {
+            'totalProducts': total_products, 'totalMovies': total_movies, 'totalSeries': total_series,
+            'totalUsers': total_users, 'staffUsers': staff_users, 'regularUsers': regular_users,
+            'totalRatings': total_ratings, 'avgRating': round(avg_rating, 2),
+            'totalComments': Comment.objects.count(),
+            'activeComments': Comment.objects.filter(is_active=True).count(),
+            'inactiveComments': Comment.objects.filter(is_active=False).count(),
+            'totalViews': total_views, 'totalDownloads': total_downloads,
+            'oldUsers': old_users, 'newUsers': new_users, 'activeUsers': active_users,
+        },
+        'ratingDistribution': rating_distribution, 'top_rated_products': top_rated_products,
+        'mostViewedProducts': most_viewed_products, 'topCommenters': top_commenters,
+        'productsByCategory': products_by_category
     }
-
-    return render(request, 'admin_dashboard.html', context)
+    return JsonResponse(data, safe=False)

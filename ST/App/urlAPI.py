@@ -1,13 +1,14 @@
 from django.urls import path
-
 from App import views
 from App.views.ProfileDetailAPI import ProfileDetailAPI, UserRatingsAPI
 from App.views.SignupAPIView import SignupAPIView
 from App.views.UserDetailView import UserDetailView
+from App.views.analytics_views import get_product_info_api, generate_rating_chart_api
 from App.views.api_views import (
     ProductListAPI, ProductDetailAPI,
     CategoryListAPI, RateProductAPI, AddCommentAPI
 )
+from App.views.dashboard_views import admin_dashboard_api
 from App.views.password_reset_views import ConfirmPasswordResetAPI, RequestPasswordResetAPI
 from App.views.watchlist_views import WatchlistAPI
 
@@ -29,4 +30,7 @@ urlpatterns = [
     path('watchlist/<int:product_id>/', WatchlistAPI.as_view(), name='api-watchlist-action'),
     path('comments/<int:comment_id>/edit/', views.edit_comment, name='api-edit-comment'),
     path('comments/<int:comment_id>/delete/', views.delete_comment, name='api-delete-comment'),
+    path('admin/stats/', admin_dashboard_api, name='admin-stats'),
+    path('admin/products/<int:product_id>/info/', get_product_info_api, name='api-product-info'),
+    path('admin/products/<int:product_id>/chart/', generate_rating_chart_api, name='api-product-chart'),
 ]

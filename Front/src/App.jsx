@@ -9,8 +9,7 @@ import Profile from "./pages/Profile";
 import ProductList from "./pages/ProductList";
 import ProductDetail from "./pages/ProductDetail";
 import Watchlist from "./pages/WatchList";
-import ProductAnalytics from "./pages/ProductAnalytics";
-import SimpleGraph from "./pages/SimpleGraph";
+import ProductAnalytics from "./pages/ProductAnalytics"; // 🟢 این همان کامپوننت آنالیتیکس شماست
 import ChangePassword from "./pages/ChangePassword";
 import EditComment from "./pages/EditComment";
 import PhoneForgotPassword from "./pages/PhoneForgotPassword";
@@ -28,9 +27,12 @@ function App() {
         <Route path="/movies" element={<ProductList/>}/>
         <Route path="/movie/:id" element={<ProductDetail/>}/>
         <Route path="/watchlist" element={<Watchlist/>}/>
-        <Route path="/ProductAnalytics" element={<ProductAnalytics/>}/>
+
+        {/* 🟢 روت‌های اصلاح شده برای آنالیتیکس (پشتیبانی از هر دو حالت آدرس‌دهی) */}
         <Route path="/ProductAnalytics/:id" element={<ProductAnalytics/>}/>
-        <Route path="/graph" element={<SimpleGraph/>}/>
+        <Route path="/analytics/:id" element={<ProductAnalytics/>}/>
+        <Route path="/ProductAnalytics" element={<ProductAnalytics/>}/>
+
         <Route path="/change-password" element={<ChangePassword/>}/>
         <Route path="/edit-comment/:id" element={<EditComment/>}/>
         <Route path="/forgot-password" element={<PhoneForgotPassword/>}/>

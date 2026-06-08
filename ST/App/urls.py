@@ -5,9 +5,6 @@ from App.views import (
     product_list, product_detail, rate_product, user_profile,
     add_comment, edit_comment, delete_comment
 )
-from App.views.analytics_views import product_rating_analytics, generate_rating_chart
-from App.views.dashboard_views import admin_dashboard
-from App.views.graph_views import simple_graph_page, generate_graph  # <-- generate_graph رو اضافه کن
 from App.views.product_views import download_product
 
 app_name = 'App'
@@ -28,15 +25,5 @@ urlpatterns = [
 
     path('change-password/', auth_views.PasswordChangeView.as_view(
         template_name='change_password.html', success_url='/profile/'), name='change_password'),
-
-    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
-
-    # گراف‌ها
-    path('generate-graph/<str:graph_type>/', generate_graph, name='generate_graph'),  # <-- این خط رو اضافه کن
-    path('graph/<str:graph_type>/', simple_graph_page, name='simple_graph'),
-
-    # نمودار تحلیلی
-    path('analytics/product/<int:product_id>/', product_rating_analytics, name='product_analytics'),
-    path('analytics/chart/<int:product_id>/', generate_rating_chart, name='analytics_chart'),
 
 ]

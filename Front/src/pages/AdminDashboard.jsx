@@ -1,9 +1,14 @@
 // pages/admin/AdminDashboard.jsx
 import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axios from "axios";
 import Navbar from "../components/Navbar.jsx";
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
     const [stats, setStats] = useState({
         totalProducts: 0,
         totalMovies: 0,
@@ -29,21 +34,58 @@ const AdminDashboard = () => {
     const [topCommenters, setTopCommenters] = useState([]);
     const [productsByCategory, setProductsByCategory] = useState({});
 
-    // useEffect(() => {
-    //   // بعداً API رو وصل کن
-    //   fetchData();
-    // }, []);
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            const token = localStorage.getItem("access_token");
+            if (!token) {
+                navigate("/login");
+                return;
+            }
 
-    const graphButtons = [{
-        name: "Binary Search", url: "/generate-graph/binary_search/", color: "bg-[#2C5F8A]", icon: "🔍",
-    }, {
-        name: "Quick Sort", url: "/generate-graph/quick_sort/", color: "bg-[#C9A84C]", icon: "⚡",
-    }, {
-        name: "Merge Sort", url: "/generate-graph/merge_sort/", color: "bg-[#4A7C59]", icon: "🔄",
-    }, {
-        name: "is_old_user", url: "/generate-graph/is_old_user/", color: "bg-[#8B3A3A]", icon: "👤",
-    },];
+            try {
+                const config = {headers: {Authorization: `Bearer ${token}`}};
+                const res = await axios.get("http://127.0.0.1:8000/api/admin/stats/", config);
 
+                // مقداردهی استیت‌ها با دیتای دریافتی از سرور
+                setStats(res.data.stats);
+                setRatingDistribution(res.data.ratingDistribution || {});
+                setTopRatedProducts(res.data.topRatedProducts || []);
+                setMostViewedProducts(res.data.mostViewedProducts || []);
+                setTopCommenters(res.data.topCommenters || []);
+                setProductsByCategory(res.data.productsByCategory || {});
+            } catch (err) {
+                console.error("خطا در دریافت آمارهای ادمین:", err);
+                if (err.response?.status === 403 || err.response?.status === 401) {
+                    setError("شما دسترسی لازم برای ورود به این صفحه را ندارید.");
+                } else {
+                    setError("خطا در بارگذاری اطلاعات از سرور.");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, [navigate]);
+
+    if (loading) {
+        return (<div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A84C]"></div>
+        </div>);
+    }
+
+    if (error) {
+        return (<div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center" dir="rtl">
+            <div className="text-center bg-white p-8 rounded-2xl shadow-md max-w-md">
+                <p className="text-red-500 font-bold text-lg mb-4">⛔ عدم دسترسی</p>
+                <p className="text-gray-600 mb-6">{error}</p>
+                <button onClick={() => navigate("/")}
+                        className="bg-[#1A2A4A] text-white px-6 py-2 rounded-xl text-sm transition hover:bg-[#2C3E50]">
+                    بازگشت به صفحه اصلی
+                </button>
+            </div>
+        </div>);
+    }
     const statCards = [{
         icon: "🎬",
         number: stats.totalProducts,
@@ -71,67 +113,12 @@ const AdminDashboard = () => {
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
         <Navbar/>
-        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-[#C9A84C]">
-                        🎬 MovieRating
-                    </div>
-                    <div className="flex space-x-4 space-x-reverse">
-                        <Link
-                            to="/"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            صفحه اصلی
-                        </Link>
-                        <Link
-                            to="/movies"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            محصولات
-                        </Link>
-                        <Link
-                            to="/admin"
-                            className="bg-[#C9A84C] text-[#1A2A4A] px-3 py-2 rounded font-bold transition"
-                        >
-                            داشبورد مدیریت
-                        </Link>
-                        <Link
-                            to="/profile"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            پروفایل
-                        </Link>
-                        <Link
-                            to="/login"
-                            className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                        >
-                            خروج
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </nav>*/}
-
         <div className="container mx-auto px-6 py-8">
             {/* Header */}
             <div className="bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] text-white p-8 rounded-2xl shadow-lg mb-8">
                 <h1 className="text-3xl font-bold mb-2">📊 داشبورد مدیریت</h1>
                 <p className="text-[#C9A84C]">آمار و تحلیل سامانه سینما</p>
             </div>
-
-            {/* Graph Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mb-10">
-                {graphButtons.map((btn, idx) => (<a
-                    key={idx}
-                    href={btn.url}
-                    target="_blank"
-                    className={`${btn.color} text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2`}
-                >
-                    <span>{btn.icon}</span> {btn.name}
-                </a>))}
-            </div>
-
             {/* Stat Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-10">
                 {statCards.map((card, idx) => (<div

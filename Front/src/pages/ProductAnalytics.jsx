@@ -1,61 +1,61 @@
 // pages/Analytics.jsx
 import React, {useState, useEffect} from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, useParams, useNavigate} from "react-router-dom";
+import axios from "axios";
 import Navbar from "../components/Navbar.jsx";
 
 const Analytics = () => {
     const {id} = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [chartImage, setChartImage] = useState("");
     const [loading, setLoading] = useState(true);
     const [period, setPeriod] = useState("monthly");
     const [days, setDays] = useState("90");
 
-    // گرفتن اطلاعات محصول
+    // ۱. دریافت اطلاعات واقعی محصول از دیتابیس
     useEffect(() => {
         const fetchProduct = async () => {
-            try {
-                // const response = await axios.get(`/api/products/${id}/`);
-                // setProduct(response.data);
+            const token = localStorage.getItem("access_token");
+            if (!token) {
+                navigate("/login");
+                return;
+            }
 
-                // داده موقت برای تست
-                setProduct({
-                    id: id,
-                    Pname: "Inception",
-                    release_date: "2010-07-16",
-                    weighted_rating: 4.85,
-                    ratings_count: 15234,
-                    views_count: 89234,
-                    download_count: 45678,
-                });
+            try {
+                const config = {headers: {Authorization: `Bearer ${token}`}};
+                const response = await axios.get(`http://127.0.0.1:8000/api/admin/products/${id}/info/`, config);
+                setProduct(response.data);
             } catch (err) {
-                console.error("خطا در گرفتن محصول", err);
+                console.error("خطا در دریافت اطلاعات محصول:", err);
             }
         };
         fetchProduct();
-    }, [id]);
+    }, [id, navigate]);
 
-    // گرفتن نمودار
+    // ۲. دریافت چارت واقعی جنریت شده توسط matplotlib از بک‌اند
     const fetchChart = async () => {
         setLoading(true);
-        try {
-            // const response = await axios.get(`/api/analytics/chart/${id}/?period=${period}&days=${days}`);
-            // setChartImage(response.data.chart);
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
 
-            // موقتاً برای تست - یه نمودار placeholder
-            setTimeout(() => {
-                setChartImage("https://via.placeholder.com/800x400/1A2A4A/C9A84C?text=Rating+Chart",);
-                setLoading(false);
-            }, 500);
+        try {
+            const config = {headers: {Authorization: `Bearer ${token}`}};
+            const response = await axios.get(`http://127.0.0.1:8000/api/admin/products/${id}/chart/?period=${period}&days=${days}`, config);
+            setChartImage(response.data.chart);
         } catch (err) {
-            console.error("خطا در گرفتن نمودار", err);
+            console.error("خطا در گرفتن نمودار:", err);
+        } finally {
             setLoading(false);
         }
     };
 
+    // اجرای خودکار دریافت چارت پس از لود شدن محصول یا تغییر فیلترها
     useEffect(() => {
-        fetchChart();
-    }, [id, period, days]);
+        if (product) {
+            fetchChart();
+        }
+    }, [id, period, days, product?.id]);
 
     const handleUpdateChart = () => {
         fetchChart();
@@ -71,35 +71,6 @@ const Analytics = () => {
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="ltr">
         <Navbar/>
-        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-                <div className="container mx-auto px-6 py-4">
-                    <div className="flex justify-between items-center">
-                        <div className="text-2xl font-bold text-[#C9A84C]">
-                            🎬 MovieRating
-                        </div>
-                        <div className="flex space-x-4">
-                            <Link
-                                to="/admin"
-                                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                            >
-                                ← Back to Dashboard
-                            </Link>
-                            <Link
-                                to="/movies"
-                                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                            >
-                                Products
-                            </Link>
-                            <Link
-                                to="/admin"
-                                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-                            >
-                                Admin Panel
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>*/}
 
         <div className="container mx-auto px-6 py-8">
             {/* Header */}
@@ -123,21 +94,21 @@ const Analytics = () => {
                 <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
                     <div className="text-3xl mb-2">📊</div>
                     <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.ratings_count.toLocaleString()}
+                        {product.ratings_count?.toLocaleString() || 0}
                     </div>
                     <div className="text-gray-500 text-sm mt-1">Total Ratings</div>
                 </div>
                 <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
                     <div className="text-3xl mb-2">👁️</div>
                     <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.views_count.toLocaleString()}
+                        {product.views_count?.toLocaleString() || 0}
                     </div>
                     <div className="text-gray-500 text-sm mt-1">Total Views</div>
                 </div>
                 <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
                     <div className="text-3xl mb-2">📥</div>
                     <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.download_count.toLocaleString()}
+                        {product.download_count?.toLocaleString() || 0}
                     </div>
                     <div className="text-gray-500 text-sm mt-1">Total Downloads</div>
                 </div>
@@ -195,7 +166,7 @@ const Analytics = () => {
                     </div>) : chartImage ? (<img
                         src={chartImage}
                         alt="Rating Chart"
-                        className="max-w-full rounded-lg"
+                        className="max-w-full rounded-lg shadow-sm"
                     />) : (<div className="text-center text-gray-500">
                         <p className="text-5xl mb-3">📊</p>
                         <p>No chart data available</p>
