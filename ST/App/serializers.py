@@ -38,11 +38,19 @@ class CommentSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     seasons = SeasonSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)  # اضافه شد: نمایش نظرات محصول
+    comments = CommentSerializer(many=True, read_only=True)
+
+    # 🟢 گرد کردن امتیاز وزندار تا ۲ رقم اعشار
+    weighted_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = '__all__'
+
+    def get_weighted_rating(self, obj):
+        if hasattr(obj, 'weighted_rating') and obj.weighted_rating is not None:
+            return round(float(obj.weighted_rating), 2)
+        return 0.0
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -52,7 +60,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class WatchListSerializer(serializers.ModelSerializer):
-    product_name = serializers.ReadOnlyField(source='product.Pname')  # اضافه شد: نمایش نام محصول
+    product_name = serializers.ReadOnlyField(source='product.Pname')
 
     class Meta:
         model = WatchList

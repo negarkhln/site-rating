@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 from django.utils import timezone
 from django.utils.html import format_html
-from slugify import slugify
+from django.utils.text import slugify  # ✅ حتماً این خط باید در بالای فایل models.py باشد
 
 
 class Category(models.Model):
@@ -21,7 +21,7 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             # استفاده از slugify با پشتیبانی از فارسی
-            self.slug = slugify(self.name, allow_unicode=False)
+            self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)
 
     def __str__(self):

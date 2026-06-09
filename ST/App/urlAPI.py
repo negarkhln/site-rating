@@ -11,10 +11,11 @@ from App.views.api_views import (
 )
 from App.views.dashboard_views import admin_dashboard_api
 from App.views.password_reset_views import ConfirmPasswordResetAPI, RequestPasswordResetAPI
+from App.views.product_views import ProductListView
 from App.views.watchlist_views import WatchlistAPI
 
 urlpatterns = [
-    path('products/', ProductListAPI.as_view(), name='product-list'),
+    path('products/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/', ProductDetailAPI.as_view(), name='product-detail'),
     path('categories/', CategoryListAPI.as_view(), name='category-list'),
     path('products/<int:pk>/rate/', RateProductAPI.as_view(), name='rate-product'),

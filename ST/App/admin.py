@@ -100,12 +100,4 @@ class RatingAdmin(admin.ModelAdmin):
     readonly_fields = ('record_date',)
 
 
-# ========== UserProfile Admin ==========
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'is_old_user_display', 'login_count', 'total_ratings_count', 'join_date')
-    readonly_fields = ('is_old_user_display', 'join_date', 'login_count', 'total_ratings_count', 'sum_of_scores')
-    fieldsets = (
-        (None, {'fields': ('user', 'join_date', 'is_old_user_display')}),
-        ('Activity Stats', {'fields': ('login_count', 'total_ratings_count', 'sum_of_scores')}),
-    )
+

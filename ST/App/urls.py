@@ -1,11 +1,9 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from App.views import (
-    home, user_login, user_logout, user_signup,
-    product_list, product_detail, rate_product, user_profile,
+    home, user_login, user_logout, user_signup, rate_product, user_profile,
     add_comment, edit_comment, delete_comment
 )
-from App.views.product_views import download_product
 
 app_name = 'App'
 
@@ -14,10 +12,7 @@ urlpatterns = [
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('signup/', user_signup, name='signup'),
-    path('products/', product_list, name='product_list'),
-    path('product/<int:product_id>/', product_detail, name='product_detail'),
     path('product/<int:product_id>/rate/', rate_product, name='rate_product'),
-    path('product/<int:product_id>/download/', download_product, name='download_product'),
     path('profile/', user_profile, name='profile'),
     path('product/<int:product_id>/comment/', add_comment, name='add_comment'),
     path('comment/<int:comment_id>/delete/', delete_comment, name='delete_comment'),

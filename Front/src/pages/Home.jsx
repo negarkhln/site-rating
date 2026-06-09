@@ -1,12 +1,17 @@
 import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import Navbar from "../components/Navbar.jsx"; // حتما باید ایمپورت شود
+import Navbar from "../components/Navbar.jsx";
 
 const Home = () => {
     const [user, setUser] = useState(null);
-    const [products, setProducts] = useState([]);
+    const [topProducts, setTopProducts] = useState([]);
+    const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // 🟢 استیت‌های مربوط به صفحه‌بندی
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 12; // تعداد محصول در هر صفحه
 
     useEffect(() => {
         // ۱. گرفتن اطلاعات کاربر
@@ -19,7 +24,7 @@ const Home = () => {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    setUser(response.data); // حالا اطلاعات kimiya از سرور میاد
+                    setUser(response.data);
                 } catch (err) {
                     console.error("خطا در دریافت اطلاعات کاربر", err);
                     localStorage.removeItem("access_token");
@@ -27,13 +32,13 @@ const Home = () => {
             }
         };
 
-        // ۲. گرفتن محصولات برتر از API (فقط یک بار تعریف شد)
+        // ۲. گرفتن تمام محصولات
         const fetchProducts = async () => {
             setLoading(true);
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/products/?sort_by=rating_desc');
-                // فقط ۴ تای اول را نمایش می‌دهیم
-                setProducts(response.data.slice(0, 4));
+                setTopProducts(response.data.slice(0, 4));
+                setAllProducts(response.data);
             } catch (err) {
                 console.error("خطا در گرفتن محصولات از API", err);
             } finally {
@@ -43,37 +48,22 @@ const Home = () => {
 
         fetchUser();
         fetchProducts();
-    }, []); // وابستگی‌ها خالی است تا فقط یک بار در لود اولیه اجرا شود
+    }, []);
+
+    // 🟢 محاسبات مربوط به صفحه‌بندی بخش «همه محصولات»
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = allProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(allProducts.length / productsPerPage);
+
+    // تابع جابه‌جایی صفحه و اسکرول نرم به ابتدای بخش محصولات
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        document.getElementById("all-products-section")?.scrollIntoView({behavior: "smooth"});
+    };
 
     return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
         <Navbar/>
-        {/*<nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-[#C9A84C]">🎬 MovieRating</div>
-                    <div className="flex space-x-4 space-x-reverse">
-                        <Link to="/" className="text-[#C9A84C] border-b-2 border-[#C9A84C] px-3 py-2 rounded">صفحه
-                            اصلی</Link>
-                        <Link to="/movies"
-                              className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded">محصولات</Link>
-                        {user ? (<>
-                            <Link to="/profile"
-                                  className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded">پروفایل
-                                من</Link>
-                            <Link to="/login"
-                                  className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded">خروج</Link>
-                        </>) : (<>
-                            <Link to="/login"
-                                  className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded">ورود</Link>
-                            <Link to="/signup"
-                                  className="bg-[#C9A84C] text-[#1A2A4A] px-4 py-2 rounded-lg font-bold hover:bg-[#B89A3E] transition">ثبت
-                                نام</Link>
-                        </>)}
-                    </div>
-                </div>
-            </div>
-        </nav>
-        */}
 
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] text-white">
@@ -87,19 +77,67 @@ const Home = () => {
 
         {/* Main Content */}
         <div className="container mx-auto px-6 py-12">
-            {/* Top Products Section */}
+
             {loading ? (<div className="flex justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A84C]"></div>
-            </div>) : products.length > 0 && (<div>
-                <h3 className="text-2xl font-bold text-[#1A2A4A] mb-6">🏆 محصولات برتر</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products.map((product) => (<Link key={product.id} to={`/movie/${product.id}`}
-                                                      className="group bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition">
-                        <h4 className="font-bold text-[#1A2A4A] text-lg mb-2">{product.Pname}</h4>
-                        <p className="text-[#C9A84C]">امتیاز: {product.weighted_rating}</p>
-                    </Link>))}
-                </div>
-            </div>)}
+            </div>) : (<>
+                {/* 1. بخش محصولات برتر */}
+                {topProducts.length > 0 && (<div className="mb-14">
+                    <h3 className="text-2xl font-bold text-[#1A2A4A] mb-6">🏆 محصولات برتر</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {topProducts.map((product) => (<Link key={product.id} to={`/movie/${product.id}`}
+                                                             className="group bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition text-center min-h-[130px] flex flex-col justify-between">
+                            <h4 className="font-bold text-[#1A2A4A] text-xl mb-2 truncate">{product.Pname}</h4>
+                            <p className="text-[#C9A84C] font-semibold text-lg">امتیاز: {Number(product.weighted_rating).toFixed(1)}</p>
+                        </Link>))}
+                    </div>
+                </div>)}
+
+                {/* 2. بخش همه محصولات با صفحه‌بندی */}
+                {allProducts.length > 0 && (<div id="all-products-section" className="border-t border-gray-200 pt-10">
+                    <h3 className="text-2xl font-bold text-[#1A2A4A] mb-6">🎬 همه محصولات</h3>
+
+                    {/* گرید محصولات صفحه فعلی */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {currentProducts.map((product) => (<Link key={product.id} to={`/movie/${product.id}`}
+                                                                 className="group bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition text-center min-h-[130px] flex flex-col justify-between border border-gray-100">
+                            <h4 className="font-bold text-[#1A2A4A] text-xl mb-2 truncate">{product.Pname}</h4>
+                            <p className="text-[#C9A84C] font-semibold text-lg">امتیاز: {Number(product.weighted_rating).toFixed(1)}</p>
+                        </Link>))}
+                    </div>
+
+                    {/* 🟢 دکمه‌های کنترل صفحه‌بندی */}
+                    {totalPages > 1 && (<div className="flex justify-center items-center gap-2 mt-12" dir="ltr">
+                        {/* دکمه قبلی */}
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-[#1A2A4A] font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                            &larr; Previous
+                        </button>
+
+                        {/* شماره صفحه‌ها */}
+                        {Array.from({length: totalPages}, (_, i) => i + 1).map((page) => (<button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`w-10 h-10 rounded-lg font-bold transition ${currentPage === page ? "bg-[#1A2A4A] text-white shadow-md" : "bg-white border border-gray-300 text-[#1A2A4A] hover:bg-gray-50"}`}
+                        >
+                            {page}
+                        </button>))}
+
+                        {/* دکمه بعدی */}
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-[#1A2A4A] font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                            Next &rarr;
+                        </button>
+                    </div>)}
+                </div>)}
+            </>)}
+
         </div>
     </div>);
 };
