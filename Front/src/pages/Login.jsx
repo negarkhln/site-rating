@@ -53,6 +53,9 @@ const Login = () => {
                 localStorage.setItem('access_token', response.data.access);
                 localStorage.setItem('refresh_token', response.data.refresh);
 
+                // 👈 این خط رو دقیقاً همین‌جا اضافه کن:
+                localStorage.setItem('is_staff', response.data.is_staff ? "true" : "false");
+
                 // تنظیم هدر پیش‌فرض برای درخواست‌های بعدی
                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
 

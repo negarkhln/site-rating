@@ -4,6 +4,9 @@ import {Link} from 'react-router-dom';
 const Navbar = () => {
     const isLoggedIn = !!localStorage.getItem("access_token");
 
+    // ۱. چک کردن وضعیت ادمین بودن از لوکال استوریج
+    const isStaff = localStorage.getItem("is_staff") === "true";
+
     const handleLogout = () => {
         localStorage.clear();
         window.location.href = "/login";
@@ -15,6 +18,10 @@ const Navbar = () => {
             <div className="flex space-x-4 space-x-reverse">
                 <Link to="/" className="text-white hover:text-[#C9A84C] px-3 py-2">صفحه اصلی</Link>
                 {isLoggedIn ? (<>
+                    {/* ۲. اگر ادمین بود، لینک پنل مدیریت ظاهر شود */}
+                    {isStaff && (<Link to="/admin" className="text-[#C9A84C] hover:text-yellow-400 font-bold px-3 py-2">
+                        🛠️ پنل مدیریت
+                    </Link>)}
                     <Link to="/profile" className="text-white hover:text-[#C9A84C] px-3 py-2">پروفایل</Link>
                     <button onClick={handleLogout} className="text-white hover:text-red-500 px-3 py-2">خروج
                     </button>

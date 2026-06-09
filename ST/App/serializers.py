@@ -1,5 +1,16 @@
 from rest_framework import serializers
+# ۱. ایمپورت کردن سریالایزر پیش‌فرض SimpleJWT
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Product, Comment, Rating, WatchList, Category, Season
+
+
+# ۲. اضافه کردن سریالایزر سفارشی برای توکن لاگین
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # اضافه کردن فیلد is_staff به بدنه پاسخ لاگین
+        data['is_staff'] = self.user.is_staff
+        return data
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -38,7 +49,6 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['product', 'score']
-        # نکته: user به صورت خودکار در view ست می‌شود (در perform_create)
 
 
 class WatchListSerializer(serializers.ModelSerializer):

@@ -1,5 +1,6 @@
 from django.urls import path
 from App import views
+from App.views.CustomTokenView import CustomTokenView
 from App.views.ProfileDetailAPI import ProfileDetailAPI, UserRatingsAPI
 from App.views.SignupAPIView import SignupAPIView
 from App.views.UserDetailView import UserDetailView
@@ -33,4 +34,5 @@ urlpatterns = [
     path('admin/stats/', admin_dashboard_api, name='admin-stats'),
     path('admin/products/<int:product_id>/info/', get_product_info_api, name='api-product-info'),
     path('admin/products/<int:product_id>/chart/', generate_rating_chart_api, name='api-product-chart'),
+    path('token/', CustomTokenView.as_view(), name='token_obtain_pair'),
 ]
