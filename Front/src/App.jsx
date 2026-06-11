@@ -1,5 +1,5 @@
 import React from "react";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Pages
 import Home from "./pages/Home";
@@ -17,33 +17,36 @@ import PhoneResetComplete from "./pages/PhoneResetComplete";
 import PhoneResetConfirm from "./pages/PhoneResetConfirm";
 import PhoneResetDone from "./pages/PhoneResetDone";
 import AdminDashboard from "./pages/AdminDashboard";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
-    return (<Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/signup" element={<Signup/>}/>
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/movies" element={<ProductList/>}/>
-        <Route path="/movie/:id" element={<ProductDetail/>}/>
-        <Route path="/watchlist" element={<Watchlist/>}/>
-
-        {/* 🟢 روت‌های اصلاح شده برای آنالیتیکس (پشتیبانی از هر دو حالت آدرس‌دهی) */}
-        <Route path="/ProductAnalytics/:id" element={<ProductAnalytics/>}/>
-        <Route path="/analytics/:id" element={<ProductAnalytics/>}/>
-        <Route path="/ProductAnalytics" element={<ProductAnalytics/>}/>
-
-        <Route path="/change-password" element={<ChangePassword/>}/>
-        <Route path="/edit-comment/:id" element={<EditComment/>}/>
-        <Route path="/forgot-password" element={<PhoneForgotPassword/>}/>
-        <Route path="/reset-complete" element={<PhoneResetComplete/>}/>
-        <Route
-            path="/reset-confirm/:uidb64/:token"
-            element={<PhoneResetConfirm/>}
-        />
-        <Route path="/reset-done" element={<PhoneResetDone/>}/>
-        <Route path="/admin" element={<AdminDashboard/>}/>
-    </Routes>);
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/movies" element={<ProductList />} />
+      <Route path="/movie/:id" element={<ProductDetail />} />
+      <Route path="/watchlist" element={<Watchlist />} />
+      <Route path="/contactus" element={<ContactUs />} />
+      {/* 🟢 روت‌های اصلاح شده برای آنالیتیکس (پشتیبانی از هر دو حالت آدرس‌دهی) */}
+      <Route path="/ProductAnalytics/:id" element={<ProductAnalytics />} />
+      <Route path="/analytics/:id" element={<ProductAnalytics />} />
+      <Route path="/ProductAnalytics" element={<ProductAnalytics />} />
+      <Route path="/products/:id" element={<ProductDetail />} />
+      <Route path="/change-password" element={<ChangePassword />} />
+      <Route path="/edit-comment/:id" element={<EditComment />} />
+      <Route path="/forgot-password" element={<PhoneForgotPassword />} />
+      <Route path="/reset-complete" element={<PhoneResetComplete />} />
+      <Route
+        path="/reset-confirm/:uidb64/:token"
+        element={<PhoneResetConfirm />}
+      />
+      <Route path="/reset-done" element={<PhoneResetDone />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+    </Routes>
+  );
 }
 
 export default App;

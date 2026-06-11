@@ -1,6 +1,7 @@
 // pages/ChangePassword.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -71,31 +72,39 @@ const ChangePassword = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
-      {/* Navbar */}
+      <Navbar />
+      {/* Navbar (همون سبک Watchlist)
       <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="text-2xl font-bold text-[#C9A84C]">
               🎬 MovieRating
             </div>
+
             <div className="flex space-x-4 space-x-reverse">
               <Link
                 to="/"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
+                className="text-white hover:text-[#C9A84C] px-3 py-2"
               >
                 صفحه اصلی
               </Link>
               <Link
                 to="/movies"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
+                className="text-white hover:text-[#C9A84C] px-3 py-2"
               >
                 محصولات
               </Link>
               <Link
-                to="/profile"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded bg-[#C9A84C]/20"
+                to="/contactus"
+                className="text-[#C9A84C] font-bold px-3 py-2"
               >
-                پروفایل من
+                ارتباط با ما
+              </Link>
+              <Link
+                to="/profile"
+                className="text-white hover:text-[#C9A84C] px-3 py-2"
+              >
+                پروفایل
               </Link>
               <Link
                 to="/login"
@@ -106,7 +115,7 @@ const ChangePassword = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
 
       <div className="container mx-auto px-6 py-16">
         <div className="max-w-lg mx-auto">
