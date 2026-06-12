@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const location = useLocation();
@@ -20,8 +21,12 @@ const Navbar = () => {
   return (
     <nav className="bg-[#2c2b30] shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-[#f58f7c]">
-          🎬 MovieRating
+        <Link
+          to="/"
+          className="text-2xl font-bold text-[#f58f7c] flex items-center gap-2"
+        >
+          <img src={logo} className="w-12 h-12 object-contain" alt="logo" />
+          MovieRating
         </Link>
 
         <div className="flex space-x-4 space-x-reverse">
