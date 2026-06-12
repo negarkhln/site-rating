@@ -1,195 +1,203 @@
 // pages/Analytics.jsx
-import React, {useState, useEffect} from "react";
-import {Link, useParams, useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar.jsx";
 
 const Analytics = () => {
-    const {id} = useParams();
-    const navigate = useNavigate();
-    const [product, setProduct] = useState(null);
-    const [chartImage, setChartImage] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [period, setPeriod] = useState("monthly");
-    const [days, setDays] = useState("90");
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-    // ۱. دریافت اطلاعات واقعی محصول از دیتابیس
-    useEffect(() => {
-        const fetchProduct = async () => {
-            const token = localStorage.getItem("access_token");
-            if (!token) {
-                navigate("/login");
-                return;
-            }
+  const [product, setProduct] = useState(null);
+  const [chartImage, setChartImage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-            try {
-                const config = {headers: {Authorization: `Bearer ${token}`}};
-                const response = await axios.get(`http://127.0.0.1:8000/api/admin/products/${id}/info/`, config);
-                setProduct(response.data);
-            } catch (err) {
-                console.error("خطا در دریافت اطلاعات محصول:", err);
-            }
-        };
-        fetchProduct();
-    }, [id, navigate]);
+  const [period, setPeriod] = useState("monthly");
+  const [days, setDays] = useState("90");
 
-    // ۲. دریافت چارت واقعی جنریت شده توسط matplotlib از بک‌اند
-    const fetchChart = async () => {
-        setLoading(true);
-        const token = localStorage.getItem("access_token");
-        if (!token) return;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) return navigate("/login");
 
-        try {
-            const config = {headers: {Authorization: `Bearer ${token}`}};
-            const response = await axios.get(`http://127.0.0.1:8000/api/admin/products/${id}/chart/?period=${period}&days=${days}`, config);
-            setChartImage(response.data.chart);
-        } catch (err) {
-            console.error("خطا در گرفتن نمودار:", err);
-        } finally {
-            setLoading(false);
-        }
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/api/admin/products/${id}/info/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+
+        setProduct(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
-    // اجرای خودکار دریافت چارت پس از لود شدن محصول یا تغییر فیلترها
-    useEffect(() => {
-        if (product) {
-            fetchChart();
-        }
-    }, [id, period, days, product?.id]);
+    fetchProduct();
+  }, [id]);
 
-    const handleUpdateChart = () => {
-        fetchChart();
-    };
+  const fetchChart = async () => {
+    setLoading(true);
 
-    if (!product) {
-        return (<div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A84C]"></div>
-        </div>);
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/admin/products/${id}/chart/?period=${period}&days=${days}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      setChartImage(res.data.chart);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const releaseYear = product.release_date ? new Date(product.release_date).getFullYear() : "N/A";
+  useEffect(() => {
+    if (product) fetchChart();
+  }, [product, period, days]);
 
-    return (<div className="min-h-screen bg-[#F5F0E8] font-sans" dir="ltr">
-        <Navbar/>
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-[#2c2b30] flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-2 border-[#f58f7c] border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
 
-        <div className="container mx-auto px-6 py-8">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] rounded-2xl p-8 mb-8 text-center">
-                <div className="text-5xl mb-3">📈</div>
-                <h1 className="text-3xl font-bold text-white">Rating Analytics</h1>
-                <p className="text-[#C9A84C] text-lg mt-2">
-                    {product.Pname} ({releaseYear})
-                </p>
-            </div>
+  const year = product.release_date
+    ? new Date(product.release_date).getFullYear()
+    : "N/A";
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
-                    <div className="text-3xl mb-2">⭐</div>
-                    <div className="text-3xl font-bold text-[#C9A84C]">
-                        {product.weighted_rating}
-                    </div>
-                    <div className="text-gray-500 text-sm mt-1">Weighted Rating</div>
-                </div>
-                <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
-                    <div className="text-3xl mb-2">📊</div>
-                    <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.ratings_count?.toLocaleString() || 0}
-                    </div>
-                    <div className="text-gray-500 text-sm mt-1">Total Ratings</div>
-                </div>
-                <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
-                    <div className="text-3xl mb-2">👁️</div>
-                    <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.views_count?.toLocaleString() || 0}
-                    </div>
-                    <div className="text-gray-500 text-sm mt-1">Total Views</div>
-                </div>
-                <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition">
-                    <div className="text-3xl mb-2">📥</div>
-                    <div className="text-3xl font-bold text-[#1A2A4A]">
-                        {product.download_count?.toLocaleString() || 0}
-                    </div>
-                    <div className="text-gray-500 text-sm mt-1">Total Downloads</div>
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-[#2c2b30] font-sans" dir="rtl">
+      <Navbar />
 
-            {/* Controls */}
-            <div className="bg-white rounded-xl p-6 mb-8 shadow-md">
-                <div className="flex flex-wrap gap-4 justify-center items-end">
-                    <div>
-                        <label className="block text-gray-600 text-sm mb-2">Period</label>
-                        <select
-                            value={period}
-                            onChange={(e) => setPeriod(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                        >
-                            <option value="weekly">Weekly View</option>
-                            <option value="monthly">Monthly View</option>
-                            <option value="yearly">Yearly View</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-gray-600 text-sm mb-2">
-                            Days Range
-                        </label>
-                        <select
-                            value={days}
-                            onChange={(e) => setDays(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
-                        >
-                            <option value="30">Last 30 days</option>
-                            <option value="90">Last 90 days</option>
-                            <option value="180">Last 180 days</option>
-                            <option value="365">Last 365 days</option>
-                        </select>
-                    </div>
-                    <button
-                        onClick={handleUpdateChart}
-                        className="bg-[#1A2A4A] text-white px-6 py-2 rounded-lg font-bold hover:bg-[#2C3E50] transition"
-                    >
-                        📊 Update Chart
-                    </button>
-                </div>
-            </div>
-
-            {/* Chart Container */}
-            <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="text-xl font-bold text-[#1A2A4A] mb-4 text-center">
-                    Rating Trend
-                </h3>
-                <div className="min-h-[400px] flex items-center justify-center">
-                    {loading ? (<div className="text-center">
-                        <div
-                            className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A84C] mx-auto mb-4"></div>
-                        <p className="text-gray-500">⏳ Loading chart...</p>
-                    </div>) : chartImage ? (<img
-                        src={chartImage}
-                        alt="Rating Chart"
-                        className="max-w-full rounded-lg shadow-sm"
-                    />) : (<div className="text-center text-gray-500">
-                        <p className="text-5xl mb-3">📊</p>
-                        <p>No chart data available</p>
-                    </div>)}
-                </div>
-            </div>
-
-            {/* Back Button */}
-            <div className="text-center mt-8">
-                <Link
-                    to="/admin"
-                    className="inline-block bg-[#C9A84C] text-[#1A2A4A] px-8 py-3 rounded-xl font-bold hover:bg-[#B89A3E] transition"
-                >
-                    ← Back to Dashboard
-                </Link>
-            </div>
+      <div className="container mx-auto px-6 py-10">
+        {/* HEADER */}
+        <div className="bg-[#4f4f51] rounded-2xl p-8 text-center shadow-lg mb-8">
+          <div className="text-4xl mb-2">📊</div>
+          <h1 className="text-2xl font-bold text-[#d6d6d6]">
+            Analytics Dashboard
+          </h1>
+          <p className="text-[#c9a7b0] mt-1">
+            {product.Pname} ({year})
+          </p>
         </div>
 
-        {/* Footer */}
-        <footer className="bg-[#1A2A4A] text-white text-center py-6 mt-12">
-            <p>© 2025 MovieRating - All Rights Reserved</p>
-        </footer>
-    </div>);
+        {/* STATS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8">
+          {[
+            {
+              icon: "⭐",
+              value: product.weighted_rating,
+              label: "Rating",
+            },
+            {
+              icon: "📊",
+              value: product.ratings_count || 0,
+              label: "Ratings",
+            },
+            {
+              icon: "👁️",
+              value: product.views_count || 0,
+              label: "Views",
+            },
+            {
+              icon: "📥",
+              value: product.download_count || 0,
+              label: "Downloads",
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-[#4f4f51] rounded-xl p-5 text-center shadow-md border border-[#4f4f51] hover:border-[#f58f7c] transition"
+            >
+              <div className="text-2xl mb-2">{item.icon}</div>
+              <div className="text-xl font-bold text-[#d6d6d6]">
+                {item.value}
+              </div>
+              <div className="text-xs text-[#c9a7b0] mt-1">{item.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* CONTROLS */}
+        <div className="bg-[#4f4f51] rounded-xl p-6 mb-8">
+          <div className="flex flex-wrap gap-4 justify-center">
+            <div>
+              <label className="text-[#d6d6d6] text-sm">Period</label>
+              <select
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                className="block mt-2 bg-[#2c2b30] text-[#d6d6d6] border border-[#4f4f51] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f58f7c]"
+              >
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[#d6d6d6] text-sm">Days</label>
+              <select
+                value={days}
+                onChange={(e) => setDays(e.target.value)}
+                className="block mt-2 bg-[#2c2b30] text-[#d6d6d6] border border-[#4f4f51] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f58f7c]"
+              >
+                <option value="30">30</option>
+                <option value="90">90</option>
+                <option value="180">180</option>
+                <option value="365">365</option>
+              </select>
+            </div>
+
+            <button
+              onClick={fetchChart}
+              className="bg-[#f58f7c] text-[#2c2b30] px-6 py-2 rounded-xl font-bold hover:bg-[#ff9f8f] transition"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+
+        {/* CHART */}
+        <div className="bg-[#4f4f51] rounded-xl p-6 text-center shadow-md">
+          <h3 className="text-[#d6d6d6] font-bold mb-4">Rating Trend</h3>
+
+          <div className="min-h-[350px] flex items-center justify-center">
+            {loading ? (
+              <div className="animate-spin w-10 h-10 border-2 border-[#f58f7c] border-t-transparent rounded-full"></div>
+            ) : chartImage ? (
+              <img
+                src={chartImage}
+                className="rounded-lg border border-[#2c2b30]"
+              />
+            ) : (
+              <p className="text-[#c9a7b0]">No data</p>
+            )}
+          </div>
+        </div>
+
+        {/* BACK */}
+        <div className="text-center mt-8">
+          <Link to="/admin" className="text-[#f58f7c] hover:underline">
+            ← Back to dashboard
+          </Link>
+        </div>
+      </div>
+
+      <footer className="bg-[#4f4f51] text-[#d6d6d6] text-center py-6 mt-10">
+        © 2025 MovieRating
+      </footer>
+    </div>
+  );
 };
 
 export default Analytics;

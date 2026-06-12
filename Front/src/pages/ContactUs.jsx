@@ -45,60 +45,17 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
-      {/* Navbar (همون سبک Watchlist)
-      <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="text-2xl font-bold text-[#C9A84C]">
-              🎬 MovieRating
-            </div>
-
-            <div className="flex space-x-4 space-x-reverse">
-              <Link
-                to="/"
-                className="text-white hover:text-[#C9A84C] px-3 py-2"
-              >
-                صفحه اصلی
-              </Link>
-              <Link
-                to="/movies"
-                className="text-white hover:text-[#C9A84C] px-3 py-2"
-              >
-                محصولات
-              </Link>
-              <Link
-                to="/contactus"
-                className="text-[#C9A84C] font-bold px-3 py-2"
-              >
-                ارتباط با ما
-              </Link>
-              <Link
-                to="/profile"
-                className="text-white hover:text-[#C9A84C] px-3 py-2"
-              >
-                پروفایل
-              </Link>
-              <Link
-                to="/login"
-                className="text-white hover:text-[#C9A84C] transition px-3 py-2 rounded"
-              >
-                خروج
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav> */}
+    <div className="min-h-screen bg-[#2c2b30] font-sans" dir="rtl">
       <Navbar />
 
-      {/* Message */}
       <div className="container mx-auto px-6 py-8">
+        {/* Message */}
         {messageBox.text && (
           <div
             className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl shadow-lg ${
               messageBox.type === "success"
-                ? "bg-green-500 text-white"
-                : "bg-red-500 text-white"
+                ? "bg-[#f58f7c] text-[#2c2b30]"
+                : "bg-[#c9a7b0] text-[#2c2b30]"
             }`}
           >
             {messageBox.text}
@@ -106,34 +63,30 @@ const ContactUs = () => {
         )}
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] rounded-2xl p-6 mb-8 text-center">
-          <div className="bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] rounded-2xl p-1 mb-8 text-center">
-            <div className="text-4xl mb-3">📩</div>
+        <div className="bg-gradient-to-r from-[#4f4f51] to-[#2c2b30] rounded-2xl p-6 mb-8 text-center">
+          <div className="text-4xl mb-3">📩</div>
 
-            {/* Title */}
-            <h1 className="text-3xl font-bold text-white mb-3">ارتباط با ما</h1>
+          <h1 className="text-3xl font-bold text-[#d6d6d6] mb-3">
+            ارتباط با ما
+          </h1>
 
-            {/* Divider */}
-            <div className="w-16 h-1 bg-[#C9A84C] mx-auto mb-4 mt-5 rounded-full"></div>
+          <div className="w-16 h-1 bg-[#f58f7c] mx-auto mb-4 mt-5 rounded-full"></div>
 
-            {/* Description */}
-            <p className="text-[#C9A84C] max-w-md mx-auto text-sm leading-7 opacity-90">
-              از طریق پیج اینستاگرام ما از اخبار سینمایی مطلع شوید و با ما در
-              ارتباط باشید. همچنین می‌توانید از طریق باکس زیر نظرات خود را ارسال
-              کنید. پیام‌های شما به ایمیل ما ارسال شده و پاسخ دریافت خواهید کرد.
-            </p>
-          </div>
+          <p className="text-[#c9a7b0] max-w-md mx-auto text-sm leading-7 opacity-90">
+            از طریق پیج اینستاگرام ما از اخبار سینمایی مطلع شوید و با ما در
+            ارتباط باشید. همچنین می‌توانید نظرات خود را ارسال کنید.
+          </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-md p-8 max-w-2xl mx-auto">
+        <div className="bg-[#4f4f51] rounded-2xl shadow-md p-8 max-w-2xl mx-auto">
           <form onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="نام"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full mb-4 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#C9A84C]"
+              className="w-full mb-4 px-4 py-3 rounded-xl bg-[#2c2b30] text-[#d6d6d6] border border-[#2c2b30] focus:ring-2 focus:ring-[#f58f7c] outline-none"
             />
 
             <input
@@ -141,7 +94,7 @@ const ContactUs = () => {
               placeholder="ایمیل"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mb-4 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#C9A84C]"
+              className="w-full mb-4 px-4 py-3 rounded-xl bg-[#2c2b30] text-[#d6d6d6] border border-[#2c2b30] focus:ring-2 focus:ring-[#f58f7c] outline-none"
             />
 
             <textarea
@@ -149,30 +102,29 @@ const ContactUs = () => {
               placeholder="پیام شما..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full mb-6 px-4 py-3 border rounded-xl resize-none focus:ring-2 focus:ring-[#C9A84C]"
+              className="w-full mb-6 px-4 py-3 rounded-xl resize-none bg-[#2c2b30] text-[#d6d6d6] border border-[#2c2b30] focus:ring-2 focus:ring-[#f58f7c] outline-none"
             />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1A2A4A] text-white py-3 rounded-xl font-bold hover:bg-[#2C3E50] transition"
+              className="w-full bg-[#f58f7c] text-[#2c2b30] py-3 rounded-xl font-bold hover:bg-[#c9a7b0] transition"
             >
               {loading ? "در حال ارسال..." : "ارسال پیام 📨"}
             </button>
           </form>
 
-          <div className="text-center mt-6 text-sm text-gray-500">
+          <div className="text-center mt-6 text-sm text-[#c9a7b0]">
             ایمیل پشتیبانی:{" "}
-            <span className="text-[#1A2A4A] font-bold">SiteRate@gmail.com</span>
+            <span className="text-[#d6d6d6] font-bold">SiteRate@gmail.com</span>
             <br />
-            صفحه اینستاگرام :{" "}
-            <span className="text-[#1A2A4A] font-bold"> SiteRate@</span>
+            اینستاگرام:{" "}
+            <span className="text-[#d6d6d6] font-bold">SiteRate@</span>
           </div>
         </div>
       </div>
 
-      {/* Footer (مثل Watchlist) */}
-      <footer className="bg-[#1A2A4A] text-white text-center py-6 mt-12">
+      <footer className="bg-[#2c2b30] text-[#d6d6d6] text-center py-6 mt-12">
         <p>© 2025 MovieRating - همه حقوق محفوظ است</p>
       </footer>
     </div>

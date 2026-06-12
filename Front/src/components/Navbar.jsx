@@ -12,16 +12,15 @@ const Navbar = () => {
     window.location.href = "/login";
   };
 
-  // 👇 تابع برای تشخیص صفحه فعال
   const isActive = (path) => location.pathname === path;
 
-  const activeStyle = "text-[#C9A84C] font-bold";
-  const normalStyle = "text-white hover:text-[#C9A84C]";
+  const activeStyle = "text-[#f58f7c] font-bold";
+  const normalStyle = "text-[#d6d6d6] hover:text-[#c9a7b0]";
 
   return (
-    <nav className="bg-[#1A2A4A] shadow-lg sticky top-0 z-50">
+    <nav className="bg-[#2c2b30] shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-[#C9A84C]">
+        <Link to="/" className="text-2xl font-bold text-[#f58f7c]">
           🎬 MovieRating
         </Link>
 
@@ -71,7 +70,7 @@ const Navbar = () => {
 
               <button
                 onClick={handleLogout}
-                className="text-white hover:text-red-500 px-3 py-2"
+                className="text-[#d6d6d6] hover:text-[#f58f7c] px-3 py-2"
               >
                 خروج
               </button>
@@ -89,7 +88,7 @@ const Navbar = () => {
 
               <Link
                 to="/signup"
-                className="bg-[#C9A84C] text-[#1A2A4A] px-4 py-2 rounded"
+                className="bg-[#f58f7c] text-[#2c2b30] px-4 py-2 rounded hover:bg-[#c9a7b0]"
               >
                 ثبت نام
               </Link>

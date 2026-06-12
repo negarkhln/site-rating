@@ -73,23 +73,25 @@ const ProductList = () => {
   const renderStars = (rating) => {
     const score = Number(rating || 0);
     return (
-      <span className="text-[#C9A84C]">{"★".repeat(Math.round(score))}</span>
+      <span className="text-[#f58f7c]">{"★".repeat(Math.round(score))}</span>
     );
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]" dir="rtl">
+    <div className="min-h-screen bg-[#2c2b30]" dir="rtl">
       <Navbar />
 
       <div className="container mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold text-[#1A2A4A] mb-6">لیست محصولات</h1>
+        <h1 className="text-3xl font-bold text-[#d6d6d6] mb-6">لیست محصولات</h1>
 
         {/* Categories */}
-        <div className="bg-[#1A2A4A] p-4 rounded-xl mb-6 flex gap-2 flex-wrap">
+        <div className="bg-[#4f4f51] p-4 rounded-xl mb-6 flex gap-2 flex-wrap">
           <button
             onClick={() => updateParam("category", "all")}
             className={`px-4 py-2 rounded ${
-              !category ? "bg-[#C9A84C]" : "bg-[#2C3E50] text-white"
+              !category
+                ? "bg-[#f58f7c] text-[#2c2b30]"
+                : "bg-[#2c2b30] text-[#d6d6d6]"
             }`}
           >
             همه
@@ -101,8 +103,8 @@ const ProductList = () => {
               onClick={() => updateParam("category", cat.slug)}
               className={`px-4 py-2 rounded ${
                 category === cat.slug
-                  ? "bg-[#C9A84C]"
-                  : "bg-[#2C3E50] text-white"
+                  ? "bg-[#f58f7c] text-[#2c2b30]"
+                  : "bg-[#2c2b30] text-[#d6d6d6]"
               }`}
             >
               {cat.name}
@@ -111,12 +113,12 @@ const ProductList = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-xl mb-6 flex gap-4 flex-wrap">
+        <div className="bg-[#4f4f51] p-4 rounded-xl mb-6 flex gap-4 flex-wrap">
           <input
             value={search}
             onChange={(e) => updateParam("search", e.target.value)}
             placeholder="جستجو..."
-            className="border p-2 rounded flex-1"
+            className="border p-2 rounded flex-1 bg-[#2c2b30] text-[#d6d6d6] border-[#4f4f51]"
           />
 
           <input
@@ -124,13 +126,13 @@ const ProductList = () => {
             value={minRating}
             onChange={(e) => updateParam("min_rating", e.target.value)}
             placeholder="حداقل امتیاز"
-            className="border p-2 rounded w-40"
+            className="border p-2 rounded w-40 bg-[#2c2b30] text-[#d6d6d6] border-[#4f4f51]"
           />
 
           <select
             value={sortBy}
             onChange={(e) => updateParam("sort_by", e.target.value)}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-[#2c2b30] text-[#d6d6d6] border-[#4f4f51]"
           >
             <option value="rating_desc">بیشترین امتیاز</option>
             <option value="rating_asc">کمترین امتیاز</option>
@@ -139,7 +141,7 @@ const ProductList = () => {
 
           <button
             onClick={() => setSearchParams({})}
-            className="bg-gray-300 px-4 py-2 rounded"
+            className="bg-[#f58f7c] text-[#2c2b30] px-4 py-2 rounded"
           >
             پاک‌کردن
           </button>
@@ -147,17 +149,20 @@ const ProductList = () => {
 
         {/* Products */}
         {loading ? (
-          <div className="text-center">در حال لود...</div>
+          <div className="text-center text-[#d6d6d6]">در حال لود...</div>
         ) : (
           <div className="space-y-4">
             {products.map((product) => (
               <div
                 key={product.id}
                 onClick={() => navigate(`/products/${product.id}`)}
-                className="bg-white p-4 rounded-xl shadow cursor-pointer hover:shadow-lg transition"
+                className="bg-[#4f4f51] p-4 rounded-xl shadow cursor-pointer hover:shadow-lg transition"
               >
-                <h3 className="text-xl font-bold">{product.Pname}</h3>
-                <div className="text-[#C9A84C]">
+                <h3 className="text-xl font-bold text-[#d6d6d6]">
+                  {product.Pname}
+                </h3>
+
+                <div className="text-[#f58f7c]">
                   {renderStars(product.weighted_rating)} (
                   {Number(product.weighted_rating).toFixed(2)})
                 </div>
@@ -173,7 +178,9 @@ const ProductList = () => {
               key={i}
               onClick={() => handlePageChange(i + 1)}
               className={`px-4 py-2 rounded ${
-                Number(page) === i + 1 ? "bg-[#1A2A4A] text-white" : "bg-white"
+                Number(page) === i + 1
+                  ? "bg-[#f58f7c] text-[#2c2b30]"
+                  : "bg-[#4f4f51] text-[#d6d6d6]"
               }`}
             >
               {i + 1}

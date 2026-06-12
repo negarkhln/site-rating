@@ -76,13 +76,12 @@ const ProductDetail = () => {
       return;
     }
     try {
-      // 🟢 اصلاح بدنه درخواست: فرستادن فیلدها به صورت مستقیم و سازگار با جنگو
       await axios.post(
         `http://127.0.0.1:8000/api/products/${id}/rate/`,
         {
           score: parseInt(selectedRating),
           rating: parseInt(selectedRating),
-          product: parseInt(id), // بر اساس خطای جنگو فرستادن شناسه محصول الزامی است
+          product: parseInt(id),
         },
         config,
       );
@@ -214,21 +213,21 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A84C]"></div>
+      <div className="min-h-screen bg-[#2c2b30] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f58f7c]"></div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#F5F0E8] flex items-center justify-center">
+      <div className="min-h-screen bg-[#2c2b30] flex items-center justify-center">
         <div className="text-center">
           <p className="text-2xl mb-4">🎬</p>
-          <p className="text-gray-600">محصولی یافت نشد</p>
+          <p className="text-[#d6d6d6]">محصولی یافت نشد</p>
           <Link
             to="/movies"
-            className="text-[#C9A84C] hover:underline mt-4 inline-block"
+            className="text-[#f58f7c] hover:underline mt-4 inline-block"
           >
             ← بازگشت به محصولات
           </Link>
@@ -242,7 +241,7 @@ const ProductDetail = () => {
     const hasHalfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     return (
-      <span className="text-[#C9A84C] text-xl tracking-wide">
+      <span className="text-[#f58f7c] text-xl tracking-wide">
         {"★".repeat(fullStars)}
         {hasHalfStar && "½"}
         {"☆".repeat(emptyStars)}
@@ -251,19 +250,24 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] font-sans" dir="rtl">
+    <div className="min-h-screen bg-[#2c2b30] font-sans" dir="rtl">
       <Navbar />
+
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {message.text && (
           <div
-            className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl shadow-lg ${message.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+            className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl shadow-lg ${
+              message.type === "success"
+                ? "bg-[#4f4f51] text-[#d6d6d6]"
+                : "bg-[#4f4f51] text-[#f58f7c]"
+            }`}
           >
             {message.text}
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-[#1A2A4A] to-[#2C3E50] p-8 text-center">
+        <div className="bg-[#4f4f51] rounded-2xl shadow-xl overflow-hidden mb-8">
+          <div className="bg-gradient-to-r from-[#2c2b30] to-[#4f4f51] p-8 text-center">
             {product.poster ? (
               <img
                 src={product.poster}
@@ -271,78 +275,80 @@ const ProductDetail = () => {
                 className="max-w-[300px] mx-auto rounded-xl shadow-lg"
               />
             ) : (
-              <div className="w-[300px] h-[400px] bg-[#2C3E50] mx-auto rounded-xl flex items-center justify-center text-gray-400">
+              <div className="w-[300px] h-[400px] bg-[#2c2b30] mx-auto rounded-xl flex items-center justify-center text-[#d6d6d6]">
                 <span className="text-6xl">🎬</span>
               </div>
             )}
           </div>
 
           <div className="p-8">
-            <h1 className="text-3xl font-bold text-[#1A2A4A] mb-4">
+            <h1 className="text-3xl font-bold text-[#d6d6d6] mb-4">
               {product.Pname}
             </h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-[#d6d6d6]">
+              {" "}
               {product.director && (
                 <p>
-                  <strong className="text-gray-600">کارگردان:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">کارگردان:</strong>{" "}
                   {product.director}
                 </p>
               )}
               {product.cast && (
                 <p>
-                  <strong className="text-gray-600">بازیگران:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">بازیگران:</strong>{" "}
                   {product.cast}
                 </p>
               )}
               {product.genre && (
                 <p>
-                  <strong className="text-gray-600">ژانر:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">ژانر:</strong>{" "}
                   {product.genre}
                 </p>
               )}
               {product.release_date && (
                 <p>
-                  <strong className="text-gray-600">تاریخ انتشار:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">تاریخ انتشار:</strong>{" "}
                   {product.release_date}
                 </p>
               )}
               {product.duration && (
                 <p>
-                  <strong className="text-gray-600">مدت زمان:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">مدت زمان:</strong>{" "}
                   {product.duration} دقیقه
                 </p>
               )}
               {product.category && (
                 <p>
-                  <strong className="text-gray-600">دسته:</strong>{" "}
+                  <strong className="text-[#c9a7b0]">دسته:</strong>{" "}
                   {product.category.name}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-wrap gap-6 mb-6 pb-6 border-b border-gray-200">
+            <div className="flex flex-wrap gap-6 mb-6 pb-6 border-b border-[#2c2b30] text-[#d6d6d6]">
               {product.imdb_rating && (
                 <div>
-                  <p className="text-gray-500 text-sm">⭐ امتیاز IMDb</p>
-                  <p className="text-2xl font-bold text-[#C9A84C]">
+                  <p className="text-[#c9a7b0] text-sm">⭐ امتیاز IMDb</p>
+                  <p className="text-2xl font-bold text-[#f58f7c]">
                     {product.imdb_rating}
-                    <span className="text-gray-400 text-sm"> / 10</span>
+                    <span className="text-[#d6d6d6] text-sm"> / 10</span>
                   </p>
                 </div>
               )}
               {product.metacritic_score && (
                 <div>
-                  <p className="text-gray-500 text-sm">🎯 نمره متاکریتیک</p>
-                  <p className="text-2xl font-bold text-green-500">
+                  <p className="text-[#c9a7b0] text-sm">🎯 نمره متاکریتیک</p>
+                  <p className="text-2xl font-bold text-[#d6d6d6]">
                     {product.metacritic_score}
-                    <span className="text-gray-400 text-sm"> / 100</span>
+                    <span className="text-[#c9a7b0] text-sm"> / 100</span>
                   </p>
                 </div>
               )}
               <div>
-                <p className="text-gray-500 text-sm">⭐ امتیاز وزندار</p>
+                <p className="text-[#c9a7b0] text-sm">⭐ امتیاز وزندار</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-[#1A2A4A]">
+                  <span className="text-2xl font-bold text-[#d6d6d6]">
                     {product.weighted_rating}
                   </span>
                   <span className="text-xl">
@@ -354,15 +360,15 @@ const ProductDetail = () => {
 
             {product.description && (
               <div className="mb-4">
-                <h3 className="font-bold text-[#1A2A4A] mb-2">توضیحات:</h3>
-                <p className="text-gray-700">{product.description}</p>
+                <h3 className="font-bold text-[#d6d6d6] mb-2">توضیحات:</h3>
+                <p className="text-[#d6d6d6]">{product.description}</p>
               </div>
             )}
 
             {product.storyline && (
               <div className="mb-6">
-                <h3 className="font-bold text-[#1A2A4A] mb-2">خلاصه داستان:</h3>
-                <p className="text-gray-700 leading-relaxed">
+                <h3 className="font-bold text-[#d6d6d6] mb-2">خلاصه داستان:</h3>
+                <p className="text-[#d6d6d6] leading-relaxed">
                   {product.storyline}
                 </p>
               </div>
@@ -370,17 +376,17 @@ const ProductDetail = () => {
 
             {product.category?.name === "سریال" &&
               product.seasons?.length > 0 && (
-                <div className="bg-[#F5F0E8] p-4 rounded-xl mb-6">
-                  <h3 className="font-bold text-[#1A2A4A] mb-3">
+                <div className="bg-[#2c2b30] p-4 rounded-xl mb-6 text-[#d6d6d6]">
+                  <h3 className="font-bold text-[#f58f7c] mb-3">
                     📺 فصل‌های سریال
                   </h3>
                   <ul className="space-y-2">
                     {product.seasons.map((season, idx) => (
-                      <li key={idx} className="border-b border-gray-300 pb-2">
+                      <li key={idx} className="border-b border-[#4f4f51] pb-2">
                         <strong>فصل {season.season_number}:</strong>{" "}
                         {season.episode_count} قسمت{" "}
                         {season.imdb_rating && (
-                          <span className="text-[#C9A84C] mr-2">
+                          <span className="text-[#f58f7c] mr-2">
                             ⭐ {season.imdb_rating}
                           </span>
                         )}
@@ -390,9 +396,9 @@ const ProductDetail = () => {
                 </div>
               )}
 
-            <div className="border-t border-gray-200 pt-4">
+            <div className="border-t border-[#4f4f51] pt-4 text-[#d6d6d6]">
               <div className="flex flex-wrap justify-between items-center">
-                <div className="text-gray-500 text-sm">
+                <div className="text-[#c9a7b0] text-sm">
                   👁️ {product.views_count?.toLocaleString()} بازدید | 📥{" "}
                   {product.download_count?.toLocaleString()} دانلود
                 </div>
@@ -402,24 +408,26 @@ const ProductDetail = () => {
                     <>
                       <button
                         onClick={handleWatchlistRemove}
-                        className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition"
+                        className="bg-[#f58f7c] text-[#2c2b30] px-4 py-2 rounded-lg text-sm hover:bg-[#ff9f8f] transition"
                       >
                         ❌ حذف از لیست تماشا
                       </button>
+
                       <div className="flex gap-2">
                         <select
                           value={watchlistStatus}
                           onChange={(e) => setWatchlistStatus(e.target.value)}
-                          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                          className="px-3 py-2 border border-[#4f4f51] rounded-lg text-sm bg-[#4f4f51] text-[#d6d6d6]"
                         >
                           <option value="planning">📌 بعداً می‌بینم</option>
                           <option value="watching">🎬 در حال تماشا</option>
                           <option value="completed">✅ تماشا شده</option>
                           <option value="favorite">❤️ علاقه‌مندی</option>
                         </select>
+
                         <button
                           onClick={handleWatchlistStatusUpdate}
-                          className="bg-[#1A2A4A] text-white px-3 py-2 rounded-lg text-sm hover:bg-[#2C3E50] transition"
+                          className="bg-[#f58f7c] text-[#2c2b30] px-3 py-2 rounded-lg text-sm hover:bg-[#ff9f8f] transition"
                         >
                           تغییر وضعیت
                         </button>
@@ -428,7 +436,7 @@ const ProductDetail = () => {
                   ) : (
                     <button
                       onClick={handleWatchlistAdd}
-                      className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition"
+                      className="bg-[#f58f7c] text-[#2c2b30] px-4 py-2 rounded-lg text-sm hover:bg-[#ff9f8f] transition"
                     >
                       ➕ افزودن به لیست تماشا
                     </button>
@@ -440,10 +448,11 @@ const ProductDetail = () => {
         </div>
 
         {/* 🌟 بخش امتیازدهی */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold text-[#1A2A4A] mb-4 border-r-4 border-[#C9A84C] pr-3">
+        <div className="bg-[#4f4f51] rounded-2xl shadow-md p-6 mb-8">
+          <h2 className="text-xl font-bold text-[#d6d6d6] mb-4 border-r-4 border-[#f58f7c] pr-3">
             ⭐ نظر و امتیاز خود را ثبت کنید
           </h2>
+
           <form
             onSubmit={handleRatingSubmit}
             className="flex items-center gap-4"
@@ -451,23 +460,25 @@ const ProductDetail = () => {
             <select
               value={selectedRating}
               onChange={(e) => setSelectedRating(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C9A84C] text-[#1A2A4A] bg-[#F5F0E8]"
+              className="px-4 py-2 border border-[#4f4f51] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f58f7c] text-[#d6d6d6] bg-[#2c2b30]"
             >
               <option value="">انتخاب امتیاز...</option>
-              <option value="5">۵ ستاره (عالی) 🌟🌟🌟🌟🌟</option>
-              <option value="4">۴ ستاره (خوب) 🌟🌟🌟🌟</option>
-              <option value="3">۳ ستاره (متوسط) 🌟🌟🌟</option>
-              <option value="2">۲ ستاره (ضعیف) 🌟🌟</option>
-              <option value="1">۱ ستاره (افتضاح) 🌟</option>
+              <option value="5">۵ ستاره 🌟🌟🌟🌟🌟</option>
+              <option value="4">۴ ستاره 🌟🌟🌟🌟</option>
+              <option value="3">۳ ستاره 🌟🌟🌟</option>
+              <option value="2">۲ ستاره 🌟🌟</option>
+              <option value="1">۱ ستاره 🌟</option>
             </select>
+
             <button
               type="submit"
-              className="bg-[#C9A84C] text-[#1A2A4A] font-bold px-6 py-2 rounded-xl hover:bg-[#B89A3E] transition"
+              className="bg-[#f58f7c] text-[#2c2b30] font-bold px-6 py-2 rounded-xl hover:bg-[#ff9f8f] transition"
             >
               ثبت امتیاز
             </button>
+
             {userRating && (
-              <span className="text-sm text-green-600 font-semibold">
+              <span className="text-sm text-[#f58f7c] font-semibold">
                 امتیاز ثبت‌شده شما: {userRating.score} از ۵
               </span>
             )}
@@ -475,8 +486,8 @@ const ProductDetail = () => {
         </div>
 
         {/* 💬 سیستم نظرات */}
-        <div className="bg-white rounded-2xl shadow-md p-6">
-          <h2 className="text-xl font-bold text-[#1A2A4A] mb-6 border-r-4 border-[#C9A84C] pr-3">
+        <div className="bg-[#4f4f51] rounded-2xl shadow-md p-6">
+          <h2 className="text-xl font-bold text-[#d6d6d6] mb-6 border-r-4 border-[#f58f7c] pr-3">
             💬 نظرات کاربران ({comments.length})
           </h2>
 
@@ -491,12 +502,13 @@ const ProductDetail = () => {
               }
               disabled={!user}
               rows="4"
-              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C9A84C] mb-3 bg-[#F5F0E8] disabled:opacity-60"
+              className="w-full p-4 border border-[#4f4f51] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f58f7c] mb-3 bg-[#2c2b30] text-[#d6d6d6] disabled:opacity-60"
             ></textarea>
+
             <button
               type="submit"
               disabled={!user || !newComment.trim()}
-              className="bg-[#1A2A4A] text-white font-bold px-6 py-2 rounded-xl hover:bg-[#2C3E50] transition disabled:opacity-50"
+              className="bg-[#2c2b30] text-[#d6d6d6] font-bold px-6 py-2 rounded-xl hover:bg-[#4f4f51] transition disabled:opacity-50"
             >
               ارسال نظر
             </button>
@@ -505,12 +517,11 @@ const ProductDetail = () => {
           {/* لیست نظرات */}
           <div className="space-y-4">
             {comments.length === 0 ? (
-              <p className="text-gray-400 text-center py-4">
+              <p className="text-[#c9a7b0] text-center py-4">
                 هنوز نظری برای این محصول ثبت نشده است.
               </p>
             ) : (
               comments.map((comment) => {
-                // 🟢 چون جنگو مستقیم نام کاربری رو به صورت رشته در فیلد user می‌فرستد:
                 const commentUsername =
                   typeof comment.user === "string"
                     ? comment.user
@@ -519,40 +530,41 @@ const ProductDetail = () => {
                 return (
                   <div
                     key={comment.id}
-                    className="bg-[#F5F0E8] p-4 rounded-xl border border-gray-200"
+                    className="bg-[#2c2b30] p-4 rounded-xl border border-[#4f4f51]"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="w-8 h-8 rounded-full bg-[#1A2A4A] text-white flex items-center justify-center font-bold text-sm">
+                        <span className="w-8 h-8 rounded-full bg-[#f58f7c] text-[#2c2b30] flex items-center justify-center font-bold text-sm">
                           {commentUsername !== "کاربر ناشناس"
                             ? commentUsername[0].toUpperCase()
                             : "👤"}
                         </span>
-                        <span className="font-bold text-[#1A2A4A]">
+                        <span className="font-bold text-[#d6d6d6]">
                           {commentUsername}
                         </span>
                       </div>
-                      <span className="text-xs text-gray-400">
+
+                      <span className="text-xs text-[#c9a7b0]">
                         {comment.created_at || "به‌تازگی"}
                       </span>
                     </div>
 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-2">
+                    <p className="text-[#d6d6d6] text-sm leading-relaxed mt-2">
                       {comment.text}
                     </p>
 
-                    {/* چک کردن دسترسی ویرایش و حذف بر اساس نام کاربری واقعی */}
                     {user && user.username === commentUsername && (
-                      <div className="flex justify-end gap-3 mt-3 pt-2 border-t border-gray-200">
+                      <div className="flex justify-end gap-3 mt-3 pt-2 border-t border-[#4f4f51]">
                         <Link
                           to={`/comments/${comment.id}/edit`}
-                          className="text-blue-600 hover:text-blue-800 text-xs flex items-center gap-1"
+                          className="text-[#f58f7c] hover:text-[#ff9f8f] text-xs flex items-center gap-1"
                         >
                           ✏️ ویرایش
                         </Link>
+
                         <button
                           onClick={() => handleDeleteComment(comment.id)}
-                          className="text-red-500 hover:text-red-700 text-xs flex items-center gap-1"
+                          className="text-[#f58f7c] hover:text-[#ff9f8f] text-xs flex items-center gap-1"
                         >
                           🗑️ حذف
                         </button>
