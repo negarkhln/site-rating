@@ -65,7 +65,22 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-[#2c2b30] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl mb-4">🔒</p>
+          <p className="flex items-center justify-center text-2xl mb-4 text-[#f58f7c]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+              />
+            </svg>
+          </p>{" "}
           <p className="text-[#d6d6d6] mb-4">
             لطفاً برای مشاهده پروفایل وارد شوید
           </p>
@@ -91,7 +106,22 @@ const Profile = () => {
             {/* Header */}
             <div className="bg-gradient-to-r from-[#2c2b30] to-[#4f4f51] px-8 py-8 text-center">
               <div className="w-24 h-24 bg-[#f58f7c] rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl text-[#2c2b30]">👤</span>
+                <span className="text-4xl text-[#2c2b30] inline-flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                    />
+                  </svg>
+                </span>{" "}
               </div>
               <h2 className="text-2xl font-bold text-[#d6d6d6]">
                 {user.username}
@@ -165,14 +195,46 @@ const Profile = () => {
                   to="/change-password"
                   className="bg-[#f58f7c] text-[#2c2b30] px-6 py-3 rounded-xl font-bold hover:bg-[#ff9f8f] transition flex items-center gap-2"
                 >
-                  <span>🔑</span> تغییر رمز عبور
+                  <span className="flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5 shrink-0 text-[#000000]"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"
+                      />
+                    </svg>
+
+                    <span>تغییر رمز عبور</span>
+                  </span>{" "}
                 </Link>
 
                 <Link
                   to="/watchlist"
-                  className="bg-[#4f4f51] text-[#d6d6d6] px-6 py-3 rounded-xl font-bold hover:bg-[#2c2b30] transition flex items-center gap-2 border border-[#4f4f51]"
+                  className="bg-[#2c2b30] text-[#d6d6d6] px-6 py-3 rounded-xl font-bold hover:bg-[#35343b] transition flex items-center gap-2 border border-[#4f4f51]"
                 >
-                  <span>📋</span> لیست تماشای من
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 shrink-0"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
+                    />
+                  </svg>
+
+                  <span>لیست تماشای من</span>
                 </Link>
               </div>
             </div>
@@ -244,7 +306,22 @@ const Profile = () => {
           {/* Empty */}
           {ratings.length === 0 && (
             <div className="bg-[#4f4f51] rounded-2xl shadow-xl mt-8 p-8 text-center">
-              <p className="text-5xl mb-4">⭐</p>
+              <p className="flex items-center justify-center text-5xl mb-4 text-[#f58f7c]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-10 h-10"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                  />
+                </svg>
+              </p>{" "}
               <p className="text-[#c9a7b0] mb-4">هنوز امتیازی ثبت نکرده‌اید</p>
               <Link to="/movies" className="text-[#f58f7c] hover:underline">
                 برای امتیازدهی به فیلم‌ها کلیک کنید ←

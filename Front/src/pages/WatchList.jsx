@@ -164,17 +164,105 @@ const Watchlist = () => {
                     }
                     className="flex-1 px-2 py-1 text-sm border border-[#4f4f51] bg-[#2c2b30] text-[#d6d6d6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f58f7c]"
                   >
-                    <option value="planning">📌 بعداً می‌بینم</option>
-                    <option value="watching">🎬 در حال تماشا</option>
-                    <option value="completed">✅ تماشا شده</option>
-                    <option value="favorite">❤️ علاقه‌مندی</option>
+                    <option value="planning">
+                      <span className="inline-flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 text-[#c9a7b0]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                          />
+                        </svg>
+                        بعداً می‌بینم
+                      </span>
+                    </option>
+                    <option value="watching">
+                      <span className="inline-flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 shrink-0 inline-block"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0 1 18 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0 1 18 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75"
+                          />
+                        </svg>
+                        در حال تماشا
+                      </span>
+                    </option>
+
+                    <option value="completed">
+                      <span className="inline-flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 shrink-0"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 12.75 6 6 9-13.5"
+                          />
+                        </svg>
+                        تماشا شده
+                      </span>
+                    </option>
+
+                    <option value="favorite">
+                      <span className="inline-flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 shrink-0"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                          />
+                        </svg>
+                        علاقه‌مندی
+                      </span>
+                    </option>
                   </select>
 
                   <button
                     onClick={() => handleRemove(item.product.id)}
                     className="text-[#f58f7c] hover:text-[#ff9f8f] text-sm px-2"
                   >
-                    ❌
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5 text-[#f58f7c] hover:text-[#ff9f8f] transition cursor-pointer"
+                      onClick={() => handleRemove(item.product.id)}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -217,7 +305,24 @@ const Watchlist = () => {
 
       <div className="container mx-auto px-6 py-8">
         <div className="bg-[#4f4f51] rounded-2xl p-6 mb-8 text-center shadow-xl border border-[#2c2b30]">
-          <div className="text-4xl mb-2">📋</div>
+          <div className="flex items-center gap-2 text-[#c9a7b0]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 shrink-0"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9"
+              />
+            </svg>
+
+            <span className="text-sm">لیست تماشای من</span>
+          </div>{" "}
           <h1 className="text-2xl font-bold text-[#d6d6d6]">لیست تماشای من</h1>
           <p className="text-[#c9a7b0] mt-1">{totalCount} آیتم در لیست شما</p>
         </div>
@@ -253,7 +358,7 @@ const Watchlist = () => {
 
         {!hasItems && (
           <div className="bg-[#4f4f51] rounded-2xl shadow-xl p-12 text-center border border-[#2c2b30]">
-            <div className="text-6xl mb-4">📭</div>
+            <div className="text-6xl mb-4"></div>
             <p className="text-[#d6d6d6] text-lg mb-2">
               لیست تماشای شما خالی است
             </p>
@@ -264,7 +369,7 @@ const Watchlist = () => {
               to="/movies"
               className="inline-block bg-[#f58f7c] text-[#2c2b30] px-6 py-3 rounded-xl font-bold hover:bg-[#ff9f8f] transition"
             >
-              🔍 مشاهده محصولات
+              مشاهده محصولات
             </Link>
           </div>
         )}
@@ -274,7 +379,7 @@ const Watchlist = () => {
             to="/profile"
             className="inline-flex items-center gap-2 bg-[#f58f7c] text-[#2c2b30] px-6 py-3 rounded-xl font-bold hover:bg-[#ff9f8f] transition"
           >
-            <span>🔙</span> بازگشت به پروفایل
+            <span></span> بازگشت به پروفایل
           </Link>
         </div>
       </div>

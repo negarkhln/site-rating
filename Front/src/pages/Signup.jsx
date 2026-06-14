@@ -124,7 +124,20 @@ const Signup = () => {
           <div className="bg-[#4f4f51] rounded-2xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-[#2c2b30] to-[#4f4f51] px-8 py-6">
               <div className="flex items-center justify-center gap-2">
-                <span className="text-3xl">📝</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8 text-[#c9a7b0]"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                  />
+                </svg>
                 <h2 className="text-2xl font-bold text-[#d6d6d6]">
                   ثبت نام در سایت
                 </h2>
@@ -142,20 +155,45 @@ const Signup = () => {
               )}
 
               {success && (
-                <div className="mb-6 p-3 bg-[#4f4f51] border border-[#c9a7b0] text-[#d6d6d6] rounded-lg text-sm">
-                  ✅ {success}
+                <div className="mb-6 p-3 bg-[#4f4f51] border border-[#c9a7b0] text-[#d6d6d6] rounded-lg text-sm flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-[#f58f7c] shrink-0"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+
+                  {success}
                 </div>
               )}
-
               <div className="mb-5">
                 <label className="block text-[#d6d6d6] font-medium mb-2">
                   نام کاربری <span className="text-[#f58f7c]">*</span>
                 </label>
 
                 <div className="relative">
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]">
-                    👤
-                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                    />
+                  </svg>
 
                   <input
                     type="text"
@@ -187,9 +225,20 @@ const Signup = () => {
                 </label>
 
                 <div className="relative">
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]">
-                    📧
-                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                    />
+                  </svg>
 
                   <input
                     type="email"
@@ -214,9 +263,20 @@ const Signup = () => {
                 </label>
 
                 <div className="relative">
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]">
-                    🔒
-                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+                    />
+                  </svg>
 
                   <input
                     type="password"
@@ -266,9 +326,20 @@ const Signup = () => {
                 </label>
 
                 <div className="relative">
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]">
-                    🔄
-                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-[#c9a7b0]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+                    />
+                  </svg>
 
                   <input
                     type="password"
