@@ -305,14 +305,14 @@ const Watchlist = () => {
 
       <div className="container mx-auto px-6 py-8">
         <div className="bg-[#4f4f51] rounded-2xl p-6 mb-8 text-center shadow-xl border border-[#2c2b30]">
-          <div className="flex items-center gap-2 text-[#c9a7b0]">
+          <div className="flex flex-col items-center justify-center gap-3 text-[#c9a7b0]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6 shrink-0"
+              className="w-14 h-14"
             >
               <path
                 strokeLinecap="round"
@@ -320,9 +320,13 @@ const Watchlist = () => {
                 d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9"
               />
             </svg>
-          </div>{" "}
-          <h1 className="text-2xl font-bold text-[#d6d6d6]">لیست تماشای من</h1>
-          <p className="text-[#c9a7b0] mt-1">{totalCount} آیتم در لیست شما</p>
+
+            <h1 className="text-2xl font-bold text-[#d6d6d6]">
+              لیست تماشای من
+            </h1>
+          </div>
+
+          <p className="text-[#c9a7b0] mt-2">{totalCount} آیتم در لیست شما</p>
         </div>
 
         <WatchlistSection
