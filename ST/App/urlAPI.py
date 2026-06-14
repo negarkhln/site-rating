@@ -9,6 +9,7 @@ from App.views.api_views import (
     ProductListAPI, ProductDetailAPI,
     CategoryListAPI, RateProductAPI, AddCommentAPI
 )
+from App.views.contactUsAPI import contact_us_view
 from App.views.dashboard_views import admin_dashboard_api
 from App.views.password_reset_views import ConfirmPasswordResetAPI, RequestPasswordResetAPI
 from App.views.product_views import ProductListView
@@ -36,4 +37,5 @@ urlpatterns = [
     path('admin/products/<int:product_id>/info/', get_product_info_api, name='api-product-info'),
     path('admin/products/<int:product_id>/chart/', generate_rating_chart_api, name='api-product-chart'),
     path('token/', CustomTokenView.as_view(), name='token_obtain_pair'),
+    path('contact/', contact_us_view, name='contact_us_api'),
 ]
