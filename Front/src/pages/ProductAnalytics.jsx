@@ -82,7 +82,22 @@ const Analytics = () => {
       <div className="container mx-auto px-6 py-10">
         {/* HEADER */}
         <div className="bg-[#4f4f51] rounded-2xl p-8 text-center shadow-lg mb-8">
-          <div className="text-4xl mb-2">📊</div>
+          <div className="text-[#c3a2ab] mb-2 flex justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-12 h-12"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z"
+              />
+            </svg>
+          </div>{" "}
           <h1 className="text-2xl font-bold text-[#d6d6d6]">
             Analytics Dashboard
           </h1>
@@ -227,7 +242,7 @@ const Analytics = () => {
 
             <button
               onClick={fetchChart}
-              className="bg-[#f58f7c] text-[#2c2b30] px-6 py-2 rounded-xl font-bold hover:bg-[#ff9f8f] transition"
+              className="self-end bg-[#f58f7c] text-[#2c2b30] px-5 py-2 rounded-lg font-semibold hover:bg-[#ff9f8f] transition"
             >
               Update
             </button>
