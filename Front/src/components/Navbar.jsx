@@ -30,12 +30,12 @@ const Navbar = () => {
         </Link>
 
         <div className="flex space-x-4 space-x-reverse">
-          <Link
+          {/* <Link
             to="/"
             className={`px-3 py-2 ${isActive("/") ? activeStyle : normalStyle}`}
           >
             صفحه اصلی
-          </Link>
+          </Link> */}
 
           <Link
             to="/contactus"

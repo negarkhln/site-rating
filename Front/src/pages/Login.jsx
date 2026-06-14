@@ -5,6 +5,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar.jsx";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -81,12 +82,12 @@ const Login = () => {
       <div className="container mx-auto px-6 py-16">
         <div className="max-w-md mx-auto">
           <div className="text-left mb-4">
-            <Link
+            {/* <Link
               to="/forgot-password"
               className="text-sm text-[#c9a7b0] hover:underline"
             >
               رمز عبور خود را فراموش کرده‌اید؟
-            </Link>
+            </Link> */}
           </div>
 
           <div className="bg-[#4f4f51] rounded-2xl shadow-xl overflow-hidden">
@@ -142,13 +143,22 @@ const Login = () => {
                     🔒
                   </span>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 pr-10 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f58f7c] transition ${errors.password ? "border-[#f58f7c]" : "border-[#4f4f51]"}`}
+                    className={`w-full px-4 py-3 pr-10 pl-10 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f58f7c] transition ${
+                      errors.password ? "border-[#f58f7c]" : "border-[#4f4f51]"
+                    }`}
                     placeholder="رمز عبور خود را وارد کنید"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9a7b0] hover:text-[#f58f7c]"
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
                 </div>
                 {errors.password && (
                   <p className="text-[#f58f7c] text-sm mt-1">

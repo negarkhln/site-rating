@@ -123,6 +123,8 @@ const ProductList = () => {
 
           <input
             type="number"
+            min="0"
+            max="5"
             value={minRating}
             onChange={(e) => updateParam("min_rating", e.target.value)}
             placeholder="حداقل امتیاز"
