@@ -71,8 +71,23 @@ const ChangePassword = () => {
           <div className="bg-[#4f4f51] rounded-2xl shadow-xl overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-[#4f4f51] to-[#2c2b30] px-8 py-6">
-              <h2 className="text-2xl font-bold text-[#d6d6d6] text-center">
-                🔐 تغییر رمز عبور
+              <h2 className="text-2xl font-bold text-[#d6d6d6] text-center flex items-center justify-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6 text-[#f58f7c] shrink-0"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+                  />
+                </svg>
+
+                <span>تغییر رمز عبور</span>
               </h2>
               <p className="text-[#c9a7b0] text-center text-sm mt-2">
                 برای امنیت بیشتر، رمز قوی انتخاب کنید

@@ -73,8 +73,8 @@ const Home = () => {
         <div className="container mx-auto px-6 py-16 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#d6d6d6]">
             {user
-              ? `خوش آمدی ${user.username} 👋 ، دنیای فیلم‌ها منتظرته`
-              : "به MovieRating خوش آمدید 🎬"}
+              ? `خوش آمدی ${user.username}  ، دنیای فیلم‌ها منتظرته`
+              : "به MovieRating خوش آمدید "}
           </h1>
 
           <p className="text-xl text-[#c9a7b0] max-w-2xl mx-auto mt-8">
@@ -95,7 +95,7 @@ const Home = () => {
             {topProducts.length > 0 && (
               <div className="mb-14">
                 <h3 className="text-2xl font-bold text-[#d6d6d6] mb-6">
-                  🏆 محصولات برتر
+                  محصولات برتر
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -125,7 +125,7 @@ const Home = () => {
                 className="border-t border-[#4f4f51] pt-10"
               >
                 <h3 className="text-2xl font-bold text-[#d6d6d6] mb-6">
-                  🎬 همه محصولات
+                  همه محصولات
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

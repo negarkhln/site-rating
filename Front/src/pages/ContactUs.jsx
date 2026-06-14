@@ -64,8 +64,22 @@ const ContactUs = () => {
 
         {/* Header */}
         <div className="bg-gradient-to-r from-[#4f4f51] to-[#2c2b30] rounded-2xl p-6 mb-8 text-center">
-          <div className="text-4xl mb-3">📩</div>
-
+          <div className="text-4xl mb-3 flex justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-10 h-10 text-[#f58f7c]"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+              />
+            </svg>
+          </div>
           <h1 className="text-3xl font-bold text-[#d6d6d6] mb-3">
             ارتباط با ما
           </h1>
@@ -104,13 +118,27 @@ const ContactUs = () => {
               onChange={(e) => setMessage(e.target.value)}
               className="w-full mb-6 px-4 py-3 rounded-xl resize-none bg-[#2c2b30] text-[#d6d6d6] border border-[#2c2b30] focus:ring-2 focus:ring-[#f58f7c] outline-none"
             />
-
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#f58f7c] text-[#2c2b30] py-3 rounded-xl font-bold hover:bg-[#c9a7b0] transition"
+              className="w-full bg-[#f58f7c] text-[#2c2b30] py-3 rounded-xl font-bold hover:bg-[#c9a7b0] transition flex items-center justify-center gap-2"
             >
-              {loading ? "در حال ارسال..." : "ارسال پیام 📨"}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                />
+              </svg>
+
+              <span>{loading ? "در حال ارسال..." : "ارسال پیام"}</span>
             </button>
           </form>
 

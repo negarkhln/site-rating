@@ -552,24 +552,6 @@ const ProductDetail = () => {
                     <p className="text-[#d6d6d6] text-sm leading-relaxed mt-2">
                       {comment.text}
                     </p>
-
-                    {user && user.username === commentUsername && (
-                      <div className="flex justify-end gap-3 mt-3 pt-2 border-t border-[#4f4f51]">
-                        <Link
-                          to={`/comments/${comment.id}/edit`}
-                          className="text-[#f58f7c] hover:text-[#ff9f8f] text-xs flex items-center gap-1"
-                        >
-                          ✏️ ویرایش
-                        </Link>
-
-                        <button
-                          onClick={() => handleDeleteComment(comment.id)}
-                          className="text-[#f58f7c] hover:text-[#ff9f8f] text-xs flex items-center gap-1"
-                        >
-                          🗑️ حذف
-                        </button>
-                      </div>
-                    )}
                   </div>
                 );
               })
